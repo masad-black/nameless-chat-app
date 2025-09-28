@@ -1,0 +1,78 @@
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../app/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// this is a read heavy table
+model Users{
+  id String @default(uuid()) // this can be index
+  username String @unique
+  email String @unique // this could be the index
+  passowrd String
+  bio String @default("Hey there.")
+  profileImage String?
+  isOnline Boolean @default(false)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+// this i also a read heavy table
+model Conversations{
+  id String @default(uuid()) @unique // this can be index
+  cretedBy String
+  type ConversationTypes
+  name String?
+  bio String?
+  bannerImage String?
+  isPublic Boolean 
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+enum ConversationTypes {
+  direct
+  group
+}
+
+model ConversationMembers{
+  id String @default(uuid()) @unique
+  conversationId String
+  userId String
+  joinedAt DateTime @default(now())
+  role ConversationRoles
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+enum ConversationRoles {
+  member
+  admin
+}
+
+// this is a write heavy table
+model Messages{
+  id String @default(uuid()) @unique
+  conversationId String
+  senderId String
+  type MessageTypes
+  content String
+  imageUrl String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @default(now())
+}
+
+enum MessageTypes {
+  text
+  image
+}
+
