@@ -127,18 +127,18 @@ exports.Prisma.UsersScalarFieldEnum = {
   passowrd: 'passowrd',
   bio: 'bio',
   profileImage: 'profileImage',
-  isOnline: 'isOnline',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ConversationsScalarFieldEnum = {
   id: 'id',
-  cretedBy: 'cretedBy',
+  createrId: 'createrId',
   type: 'type',
   name: 'name',
   bio: 'bio',
   bannerImage: 'bannerImage',
+  isPublic: 'isPublic',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -162,6 +162,12 @@ exports.Prisma.MessagesScalarFieldEnum = {
   imageUrl: 'imageUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.GroupRequestsScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  userId: 'userId'
 };
 
 exports.Prisma.SortOrder = {
@@ -197,7 +203,8 @@ exports.Prisma.ModelName = {
   Users: 'Users',
   Conversations: 'Conversations',
   ConversationMembers: 'ConversationMembers',
-  Messages: 'Messages'
+  Messages: 'Messages',
+  GroupRequests: 'GroupRequests'
 };
 
 /**

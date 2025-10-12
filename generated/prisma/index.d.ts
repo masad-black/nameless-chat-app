@@ -33,6 +33,11 @@ export type ConversationMembers = $Result.DefaultSelection<Prisma.$ConversationM
  * 
  */
 export type Messages = $Result.DefaultSelection<Prisma.$MessagesPayload>
+/**
+ * Model GroupRequests
+ * 
+ */
+export type GroupRequests = $Result.DefaultSelection<Prisma.$GroupRequestsPayload>
 
 /**
  * Enums
@@ -232,6 +237,16 @@ export class PrismaClient<
     * ```
     */
   get messages(): Prisma.MessagesDelegate<ExtArgs, ClientOptions>;
+
+  /**
+   * `prisma.groupRequests`: Exposes CRUD operations for the **GroupRequests** model.
+    * Example usage:
+    * ```ts
+    * // Fetch zero or more GroupRequests
+    * const groupRequests = await prisma.groupRequests.findMany()
+    * ```
+    */
+  get groupRequests(): Prisma.GroupRequestsDelegate<ExtArgs, ClientOptions>;
 }
 
 export namespace Prisma {
@@ -675,7 +690,8 @@ export namespace Prisma {
     Users: 'Users',
     Conversations: 'Conversations',
     ConversationMembers: 'ConversationMembers',
-    Messages: 'Messages'
+    Messages: 'Messages',
+    GroupRequests: 'GroupRequests'
   };
 
   export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -694,7 +710,7 @@ export namespace Prisma {
       omit: GlobalOmitOptions
     }
     meta: {
-      modelProps: "users" | "conversations" | "conversationMembers" | "messages"
+      modelProps: "users" | "conversations" | "conversationMembers" | "messages" | "groupRequests"
       txIsolationLevel: Prisma.TransactionIsolationLevel
     }
     model: {
@@ -994,6 +1010,80 @@ export namespace Prisma {
           }
         }
       }
+      GroupRequests: {
+        payload: Prisma.$GroupRequestsPayload<ExtArgs>
+        fields: Prisma.GroupRequestsFieldRefs
+        operations: {
+          findUnique: {
+            args: Prisma.GroupRequestsFindUniqueArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupRequestsPayload> | null
+          }
+          findUniqueOrThrow: {
+            args: Prisma.GroupRequestsFindUniqueOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupRequestsPayload>
+          }
+          findFirst: {
+            args: Prisma.GroupRequestsFindFirstArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupRequestsPayload> | null
+          }
+          findFirstOrThrow: {
+            args: Prisma.GroupRequestsFindFirstOrThrowArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupRequestsPayload>
+          }
+          findMany: {
+            args: Prisma.GroupRequestsFindManyArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupRequestsPayload>[]
+          }
+          create: {
+            args: Prisma.GroupRequestsCreateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupRequestsPayload>
+          }
+          createMany: {
+            args: Prisma.GroupRequestsCreateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          createManyAndReturn: {
+            args: Prisma.GroupRequestsCreateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupRequestsPayload>[]
+          }
+          delete: {
+            args: Prisma.GroupRequestsDeleteArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupRequestsPayload>
+          }
+          update: {
+            args: Prisma.GroupRequestsUpdateArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupRequestsPayload>
+          }
+          deleteMany: {
+            args: Prisma.GroupRequestsDeleteManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateMany: {
+            args: Prisma.GroupRequestsUpdateManyArgs<ExtArgs>
+            result: BatchPayload
+          }
+          updateManyAndReturn: {
+            args: Prisma.GroupRequestsUpdateManyAndReturnArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupRequestsPayload>[]
+          }
+          upsert: {
+            args: Prisma.GroupRequestsUpsertArgs<ExtArgs>
+            result: $Utils.PayloadToResult<Prisma.$GroupRequestsPayload>
+          }
+          aggregate: {
+            args: Prisma.GroupRequestsAggregateArgs<ExtArgs>
+            result: $Utils.Optional<AggregateGroupRequests>
+          }
+          groupBy: {
+            args: Prisma.GroupRequestsGroupByArgs<ExtArgs>
+            result: $Utils.Optional<GroupRequestsGroupByOutputType>[]
+          }
+          count: {
+            args: Prisma.GroupRequestsCountArgs<ExtArgs>
+            result: $Utils.Optional<GroupRequestsCountAggregateOutputType> | number
+          }
+        }
+      }
     }
   } & {
     other: {
@@ -1094,6 +1184,7 @@ export namespace Prisma {
     conversations?: ConversationsOmit
     conversationMembers?: ConversationMembersOmit
     messages?: MessagesOmit
+    groupRequests?: GroupRequestsOmit
   }
 
   /* Types for Logging */
@@ -1191,7 +1282,6 @@ export namespace Prisma {
     passowrd: string | null
     bio: string | null
     profileImage: string | null
-    isOnline: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1203,7 +1293,6 @@ export namespace Prisma {
     passowrd: string | null
     bio: string | null
     profileImage: string | null
-    isOnline: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
@@ -1215,7 +1304,6 @@ export namespace Prisma {
     passowrd: number
     bio: number
     profileImage: number
-    isOnline: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -1229,7 +1317,6 @@ export namespace Prisma {
     passowrd?: true
     bio?: true
     profileImage?: true
-    isOnline?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -1241,7 +1328,6 @@ export namespace Prisma {
     passowrd?: true
     bio?: true
     profileImage?: true
-    isOnline?: true
     createdAt?: true
     updatedAt?: true
   }
@@ -1253,7 +1339,6 @@ export namespace Prisma {
     passowrd?: true
     bio?: true
     profileImage?: true
-    isOnline?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -1338,7 +1423,6 @@ export namespace Prisma {
     passowrd: string
     bio: string
     profileImage: string | null
-    isOnline: boolean
     createdAt: Date
     updatedAt: Date
     _count: UsersCountAggregateOutputType | null
@@ -1367,7 +1451,6 @@ export namespace Prisma {
     passowrd?: boolean
     bio?: boolean
     profileImage?: boolean
-    isOnline?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["users"]>
@@ -1379,7 +1462,6 @@ export namespace Prisma {
     passowrd?: boolean
     bio?: boolean
     profileImage?: boolean
-    isOnline?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["users"]>
@@ -1391,7 +1473,6 @@ export namespace Prisma {
     passowrd?: boolean
     bio?: boolean
     profileImage?: boolean
-    isOnline?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["users"]>
@@ -1403,12 +1484,11 @@ export namespace Prisma {
     passowrd?: boolean
     bio?: boolean
     profileImage?: boolean
-    isOnline?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type UsersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "email" | "passowrd" | "bio" | "profileImage" | "isOnline" | "createdAt" | "updatedAt", ExtArgs["result"]["users"]>
+  export type UsersOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "username" | "email" | "passowrd" | "bio" | "profileImage" | "createdAt" | "updatedAt", ExtArgs["result"]["users"]>
 
   export type $UsersPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Users"
@@ -1420,7 +1500,6 @@ export namespace Prisma {
       passowrd: string
       bio: string
       profileImage: string | null
-      isOnline: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["users"]>
@@ -1852,7 +1931,6 @@ export namespace Prisma {
     readonly passowrd: FieldRef<"Users", 'String'>
     readonly bio: FieldRef<"Users", 'String'>
     readonly profileImage: FieldRef<"Users", 'String'>
-    readonly isOnline: FieldRef<"Users", 'Boolean'>
     readonly createdAt: FieldRef<"Users", 'DateTime'>
     readonly updatedAt: FieldRef<"Users", 'DateTime'>
   }
@@ -2233,33 +2311,36 @@ export namespace Prisma {
 
   export type ConversationsMinAggregateOutputType = {
     id: string | null
-    cretedBy: string | null
+    createrId: string | null
     type: $Enums.ConversationTypes | null
     name: string | null
     bio: string | null
     bannerImage: string | null
+    isPublic: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type ConversationsMaxAggregateOutputType = {
     id: string | null
-    cretedBy: string | null
+    createrId: string | null
     type: $Enums.ConversationTypes | null
     name: string | null
     bio: string | null
     bannerImage: string | null
+    isPublic: boolean | null
     createdAt: Date | null
     updatedAt: Date | null
   }
 
   export type ConversationsCountAggregateOutputType = {
     id: number
-    cretedBy: number
+    createrId: number
     type: number
     name: number
     bio: number
     bannerImage: number
+    isPublic: number
     createdAt: number
     updatedAt: number
     _all: number
@@ -2268,33 +2349,36 @@ export namespace Prisma {
 
   export type ConversationsMinAggregateInputType = {
     id?: true
-    cretedBy?: true
+    createrId?: true
     type?: true
     name?: true
     bio?: true
     bannerImage?: true
+    isPublic?: true
     createdAt?: true
     updatedAt?: true
   }
 
   export type ConversationsMaxAggregateInputType = {
     id?: true
-    cretedBy?: true
+    createrId?: true
     type?: true
     name?: true
     bio?: true
     bannerImage?: true
+    isPublic?: true
     createdAt?: true
     updatedAt?: true
   }
 
   export type ConversationsCountAggregateInputType = {
     id?: true
-    cretedBy?: true
+    createrId?: true
     type?: true
     name?: true
     bio?: true
     bannerImage?: true
+    isPublic?: true
     createdAt?: true
     updatedAt?: true
     _all?: true
@@ -2374,11 +2458,12 @@ export namespace Prisma {
 
   export type ConversationsGroupByOutputType = {
     id: string
-    cretedBy: string
+    createrId: string
     type: $Enums.ConversationTypes
-    name: string
+    name: string | null
     bio: string | null
     bannerImage: string | null
+    isPublic: boolean
     createdAt: Date
     updatedAt: Date
     _count: ConversationsCountAggregateOutputType | null
@@ -2402,60 +2487,65 @@ export namespace Prisma {
 
   export type ConversationsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    cretedBy?: boolean
+    createrId?: boolean
     type?: boolean
     name?: boolean
     bio?: boolean
     bannerImage?: boolean
+    isPublic?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["conversations"]>
 
   export type ConversationsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    cretedBy?: boolean
+    createrId?: boolean
     type?: boolean
     name?: boolean
     bio?: boolean
     bannerImage?: boolean
+    isPublic?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["conversations"]>
 
   export type ConversationsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
     id?: boolean
-    cretedBy?: boolean
+    createrId?: boolean
     type?: boolean
     name?: boolean
     bio?: boolean
     bannerImage?: boolean
+    isPublic?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }, ExtArgs["result"]["conversations"]>
 
   export type ConversationsSelectScalar = {
     id?: boolean
-    cretedBy?: boolean
+    createrId?: boolean
     type?: boolean
     name?: boolean
     bio?: boolean
     bannerImage?: boolean
+    isPublic?: boolean
     createdAt?: boolean
     updatedAt?: boolean
   }
 
-  export type ConversationsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "cretedBy" | "type" | "name" | "bio" | "bannerImage" | "createdAt" | "updatedAt", ExtArgs["result"]["conversations"]>
+  export type ConversationsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "createrId" | "type" | "name" | "bio" | "bannerImage" | "isPublic" | "createdAt" | "updatedAt", ExtArgs["result"]["conversations"]>
 
   export type $ConversationsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
     name: "Conversations"
     objects: {}
     scalars: $Extensions.GetPayloadResult<{
       id: string
-      cretedBy: string
+      createrId: string
       type: $Enums.ConversationTypes
-      name: string
+      name: string | null
       bio: string | null
       bannerImage: string | null
+      isPublic: boolean
       createdAt: Date
       updatedAt: Date
     }, ExtArgs["result"]["conversations"]>
@@ -2882,11 +2972,12 @@ export namespace Prisma {
    */
   interface ConversationsFieldRefs {
     readonly id: FieldRef<"Conversations", 'String'>
-    readonly cretedBy: FieldRef<"Conversations", 'String'>
+    readonly createrId: FieldRef<"Conversations", 'String'>
     readonly type: FieldRef<"Conversations", 'ConversationTypes'>
     readonly name: FieldRef<"Conversations", 'String'>
     readonly bio: FieldRef<"Conversations", 'String'>
     readonly bannerImage: FieldRef<"Conversations", 'String'>
+    readonly isPublic: FieldRef<"Conversations", 'Boolean'>
     readonly createdAt: FieldRef<"Conversations", 'DateTime'>
     readonly updatedAt: FieldRef<"Conversations", 'DateTime'>
   }
@@ -5311,6 +5402,975 @@ export namespace Prisma {
 
 
   /**
+   * Model GroupRequests
+   */
+
+  export type AggregateGroupRequests = {
+    _count: GroupRequestsCountAggregateOutputType | null
+    _min: GroupRequestsMinAggregateOutputType | null
+    _max: GroupRequestsMaxAggregateOutputType | null
+  }
+
+  export type GroupRequestsMinAggregateOutputType = {
+    id: string | null
+    conversationId: string | null
+    userId: string | null
+  }
+
+  export type GroupRequestsMaxAggregateOutputType = {
+    id: string | null
+    conversationId: string | null
+    userId: string | null
+  }
+
+  export type GroupRequestsCountAggregateOutputType = {
+    id: number
+    conversationId: number
+    userId: number
+    _all: number
+  }
+
+
+  export type GroupRequestsMinAggregateInputType = {
+    id?: true
+    conversationId?: true
+    userId?: true
+  }
+
+  export type GroupRequestsMaxAggregateInputType = {
+    id?: true
+    conversationId?: true
+    userId?: true
+  }
+
+  export type GroupRequestsCountAggregateInputType = {
+    id?: true
+    conversationId?: true
+    userId?: true
+    _all?: true
+  }
+
+  export type GroupRequestsAggregateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GroupRequests to aggregate.
+     */
+    where?: GroupRequestsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupRequests to fetch.
+     */
+    orderBy?: GroupRequestsOrderByWithRelationInput | GroupRequestsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the start position
+     */
+    cursor?: GroupRequestsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Count returned GroupRequests
+    **/
+    _count?: true | GroupRequestsCountAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the minimum value
+    **/
+    _min?: GroupRequestsMinAggregateInputType
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/aggregations Aggregation Docs}
+     * 
+     * Select which fields to find the maximum value
+    **/
+    _max?: GroupRequestsMaxAggregateInputType
+  }
+
+  export type GetGroupRequestsAggregateType<T extends GroupRequestsAggregateArgs> = {
+        [P in keyof T & keyof AggregateGroupRequests]: P extends '_count' | 'count'
+      ? T[P] extends true
+        ? number
+        : GetScalarType<T[P], AggregateGroupRequests[P]>
+      : GetScalarType<T[P], AggregateGroupRequests[P]>
+  }
+
+
+
+
+  export type GroupRequestsGroupByArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    where?: GroupRequestsWhereInput
+    orderBy?: GroupRequestsOrderByWithAggregationInput | GroupRequestsOrderByWithAggregationInput[]
+    by: GroupRequestsScalarFieldEnum[] | GroupRequestsScalarFieldEnum
+    having?: GroupRequestsScalarWhereWithAggregatesInput
+    take?: number
+    skip?: number
+    _count?: GroupRequestsCountAggregateInputType | true
+    _min?: GroupRequestsMinAggregateInputType
+    _max?: GroupRequestsMaxAggregateInputType
+  }
+
+  export type GroupRequestsGroupByOutputType = {
+    id: string
+    conversationId: string
+    userId: string
+    _count: GroupRequestsCountAggregateOutputType | null
+    _min: GroupRequestsMinAggregateOutputType | null
+    _max: GroupRequestsMaxAggregateOutputType | null
+  }
+
+  type GetGroupRequestsGroupByPayload<T extends GroupRequestsGroupByArgs> = Prisma.PrismaPromise<
+    Array<
+      PickEnumerable<GroupRequestsGroupByOutputType, T['by']> &
+        {
+          [P in ((keyof T) & (keyof GroupRequestsGroupByOutputType))]: P extends '_count'
+            ? T[P] extends boolean
+              ? number
+              : GetScalarType<T[P], GroupRequestsGroupByOutputType[P]>
+            : GetScalarType<T[P], GroupRequestsGroupByOutputType[P]>
+        }
+      >
+    >
+
+
+  export type GroupRequestsSelect<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    conversationId?: boolean
+    userId?: boolean
+  }, ExtArgs["result"]["groupRequests"]>
+
+  export type GroupRequestsSelectCreateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    conversationId?: boolean
+    userId?: boolean
+  }, ExtArgs["result"]["groupRequests"]>
+
+  export type GroupRequestsSelectUpdateManyAndReturn<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetSelect<{
+    id?: boolean
+    conversationId?: boolean
+    userId?: boolean
+  }, ExtArgs["result"]["groupRequests"]>
+
+  export type GroupRequestsSelectScalar = {
+    id?: boolean
+    conversationId?: boolean
+    userId?: boolean
+  }
+
+  export type GroupRequestsOmit<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = $Extensions.GetOmit<"id" | "conversationId" | "userId", ExtArgs["result"]["groupRequests"]>
+
+  export type $GroupRequestsPayload<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    name: "GroupRequests"
+    objects: {}
+    scalars: $Extensions.GetPayloadResult<{
+      id: string
+      conversationId: string
+      userId: string
+    }, ExtArgs["result"]["groupRequests"]>
+    composites: {}
+  }
+
+  type GroupRequestsGetPayload<S extends boolean | null | undefined | GroupRequestsDefaultArgs> = $Result.GetResult<Prisma.$GroupRequestsPayload, S>
+
+  type GroupRequestsCountArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> =
+    Omit<GroupRequestsFindManyArgs, 'select' | 'include' | 'distinct' | 'omit'> & {
+      select?: GroupRequestsCountAggregateInputType | true
+    }
+
+  export interface GroupRequestsDelegate<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> {
+    [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['GroupRequests'], meta: { name: 'GroupRequests' } }
+    /**
+     * Find zero or one GroupRequests that matches the filter.
+     * @param {GroupRequestsFindUniqueArgs} args - Arguments to find a GroupRequests
+     * @example
+     * // Get one GroupRequests
+     * const groupRequests = await prisma.groupRequests.findUnique({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUnique<T extends GroupRequestsFindUniqueArgs>(args: SelectSubset<T, GroupRequestsFindUniqueArgs<ExtArgs>>): Prisma__GroupRequestsClient<$Result.GetResult<Prisma.$GroupRequestsPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find one GroupRequests that matches the filter or throw an error with `error.code='P2025'`
+     * if no matches were found.
+     * @param {GroupRequestsFindUniqueOrThrowArgs} args - Arguments to find a GroupRequests
+     * @example
+     * // Get one GroupRequests
+     * const groupRequests = await prisma.groupRequests.findUniqueOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findUniqueOrThrow<T extends GroupRequestsFindUniqueOrThrowArgs>(args: SelectSubset<T, GroupRequestsFindUniqueOrThrowArgs<ExtArgs>>): Prisma__GroupRequestsClient<$Result.GetResult<Prisma.$GroupRequestsPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GroupRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupRequestsFindFirstArgs} args - Arguments to find a GroupRequests
+     * @example
+     * // Get one GroupRequests
+     * const groupRequests = await prisma.groupRequests.findFirst({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirst<T extends GroupRequestsFindFirstArgs>(args?: SelectSubset<T, GroupRequestsFindFirstArgs<ExtArgs>>): Prisma__GroupRequestsClient<$Result.GetResult<Prisma.$GroupRequestsPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find the first GroupRequests that matches the filter or
+     * throw `PrismaKnownClientError` with `P2025` code if no matches were found.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupRequestsFindFirstOrThrowArgs} args - Arguments to find a GroupRequests
+     * @example
+     * // Get one GroupRequests
+     * const groupRequests = await prisma.groupRequests.findFirstOrThrow({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     */
+    findFirstOrThrow<T extends GroupRequestsFindFirstOrThrowArgs>(args?: SelectSubset<T, GroupRequestsFindFirstOrThrowArgs<ExtArgs>>): Prisma__GroupRequestsClient<$Result.GetResult<Prisma.$GroupRequestsPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Find zero or more GroupRequests that matches the filter.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupRequestsFindManyArgs} args - Arguments to filter and select certain fields only.
+     * @example
+     * // Get all GroupRequests
+     * const groupRequests = await prisma.groupRequests.findMany()
+     * 
+     * // Get first 10 GroupRequests
+     * const groupRequests = await prisma.groupRequests.findMany({ take: 10 })
+     * 
+     * // Only select the `id`
+     * const groupRequestsWithIdOnly = await prisma.groupRequests.findMany({ select: { id: true } })
+     * 
+     */
+    findMany<T extends GroupRequestsFindManyArgs>(args?: SelectSubset<T, GroupRequestsFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupRequestsPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+
+    /**
+     * Create a GroupRequests.
+     * @param {GroupRequestsCreateArgs} args - Arguments to create a GroupRequests.
+     * @example
+     * // Create one GroupRequests
+     * const GroupRequests = await prisma.groupRequests.create({
+     *   data: {
+     *     // ... data to create a GroupRequests
+     *   }
+     * })
+     * 
+     */
+    create<T extends GroupRequestsCreateArgs>(args: SelectSubset<T, GroupRequestsCreateArgs<ExtArgs>>): Prisma__GroupRequestsClient<$Result.GetResult<Prisma.$GroupRequestsPayload<ExtArgs>, T, "create", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Create many GroupRequests.
+     * @param {GroupRequestsCreateManyArgs} args - Arguments to create many GroupRequests.
+     * @example
+     * // Create many GroupRequests
+     * const groupRequests = await prisma.groupRequests.createMany({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     *     
+     */
+    createMany<T extends GroupRequestsCreateManyArgs>(args?: SelectSubset<T, GroupRequestsCreateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Create many GroupRequests and returns the data saved in the database.
+     * @param {GroupRequestsCreateManyAndReturnArgs} args - Arguments to create many GroupRequests.
+     * @example
+     * // Create many GroupRequests
+     * const groupRequests = await prisma.groupRequests.createManyAndReturn({
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Create many GroupRequests and only return the `id`
+     * const groupRequestsWithIdOnly = await prisma.groupRequests.createManyAndReturn({
+     *   select: { id: true },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    createManyAndReturn<T extends GroupRequestsCreateManyAndReturnArgs>(args?: SelectSubset<T, GroupRequestsCreateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupRequestsPayload<ExtArgs>, T, "createManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Delete a GroupRequests.
+     * @param {GroupRequestsDeleteArgs} args - Arguments to delete one GroupRequests.
+     * @example
+     * // Delete one GroupRequests
+     * const GroupRequests = await prisma.groupRequests.delete({
+     *   where: {
+     *     // ... filter to delete one GroupRequests
+     *   }
+     * })
+     * 
+     */
+    delete<T extends GroupRequestsDeleteArgs>(args: SelectSubset<T, GroupRequestsDeleteArgs<ExtArgs>>): Prisma__GroupRequestsClient<$Result.GetResult<Prisma.$GroupRequestsPayload<ExtArgs>, T, "delete", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Update one GroupRequests.
+     * @param {GroupRequestsUpdateArgs} args - Arguments to update one GroupRequests.
+     * @example
+     * // Update one GroupRequests
+     * const groupRequests = await prisma.groupRequests.update({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    update<T extends GroupRequestsUpdateArgs>(args: SelectSubset<T, GroupRequestsUpdateArgs<ExtArgs>>): Prisma__GroupRequestsClient<$Result.GetResult<Prisma.$GroupRequestsPayload<ExtArgs>, T, "update", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+    /**
+     * Delete zero or more GroupRequests.
+     * @param {GroupRequestsDeleteManyArgs} args - Arguments to filter GroupRequests to delete.
+     * @example
+     * // Delete a few GroupRequests
+     * const { count } = await prisma.groupRequests.deleteMany({
+     *   where: {
+     *     // ... provide filter here
+     *   }
+     * })
+     * 
+     */
+    deleteMany<T extends GroupRequestsDeleteManyArgs>(args?: SelectSubset<T, GroupRequestsDeleteManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GroupRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupRequestsUpdateManyArgs} args - Arguments to update one or more rows.
+     * @example
+     * // Update many GroupRequests
+     * const groupRequests = await prisma.groupRequests.updateMany({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: {
+     *     // ... provide data here
+     *   }
+     * })
+     * 
+     */
+    updateMany<T extends GroupRequestsUpdateManyArgs>(args: SelectSubset<T, GroupRequestsUpdateManyArgs<ExtArgs>>): Prisma.PrismaPromise<BatchPayload>
+
+    /**
+     * Update zero or more GroupRequests and returns the data updated in the database.
+     * @param {GroupRequestsUpdateManyAndReturnArgs} args - Arguments to update many GroupRequests.
+     * @example
+     * // Update many GroupRequests
+     * const groupRequests = await prisma.groupRequests.updateManyAndReturn({
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * 
+     * // Update zero or more GroupRequests and only return the `id`
+     * const groupRequestsWithIdOnly = await prisma.groupRequests.updateManyAndReturn({
+     *   select: { id: true },
+     *   where: {
+     *     // ... provide filter here
+     *   },
+     *   data: [
+     *     // ... provide data here
+     *   ]
+     * })
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * 
+     */
+    updateManyAndReturn<T extends GroupRequestsUpdateManyAndReturnArgs>(args: SelectSubset<T, GroupRequestsUpdateManyAndReturnArgs<ExtArgs>>): Prisma.PrismaPromise<$Result.GetResult<Prisma.$GroupRequestsPayload<ExtArgs>, T, "updateManyAndReturn", GlobalOmitOptions>>
+
+    /**
+     * Create or update one GroupRequests.
+     * @param {GroupRequestsUpsertArgs} args - Arguments to update or create a GroupRequests.
+     * @example
+     * // Update or create a GroupRequests
+     * const groupRequests = await prisma.groupRequests.upsert({
+     *   create: {
+     *     // ... data to create a GroupRequests
+     *   },
+     *   update: {
+     *     // ... in case it already exists, update
+     *   },
+     *   where: {
+     *     // ... the filter for the GroupRequests we want to update
+     *   }
+     * })
+     */
+    upsert<T extends GroupRequestsUpsertArgs>(args: SelectSubset<T, GroupRequestsUpsertArgs<ExtArgs>>): Prisma__GroupRequestsClient<$Result.GetResult<Prisma.$GroupRequestsPayload<ExtArgs>, T, "upsert", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+
+
+    /**
+     * Count the number of GroupRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupRequestsCountArgs} args - Arguments to filter GroupRequests to count.
+     * @example
+     * // Count the number of GroupRequests
+     * const count = await prisma.groupRequests.count({
+     *   where: {
+     *     // ... the filter for the GroupRequests we want to count
+     *   }
+     * })
+    **/
+    count<T extends GroupRequestsCountArgs>(
+      args?: Subset<T, GroupRequestsCountArgs>,
+    ): Prisma.PrismaPromise<
+      T extends $Utils.Record<'select', any>
+        ? T['select'] extends true
+          ? number
+          : GetScalarType<T['select'], GroupRequestsCountAggregateOutputType>
+        : number
+    >
+
+    /**
+     * Allows you to perform aggregations operations on a GroupRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupRequestsAggregateArgs} args - Select which aggregations you would like to apply and on what fields.
+     * @example
+     * // Ordered by age ascending
+     * // Where email contains prisma.io
+     * // Limited to the 10 users
+     * const aggregations = await prisma.user.aggregate({
+     *   _avg: {
+     *     age: true,
+     *   },
+     *   where: {
+     *     email: {
+     *       contains: "prisma.io",
+     *     },
+     *   },
+     *   orderBy: {
+     *     age: "asc",
+     *   },
+     *   take: 10,
+     * })
+    **/
+    aggregate<T extends GroupRequestsAggregateArgs>(args: Subset<T, GroupRequestsAggregateArgs>): Prisma.PrismaPromise<GetGroupRequestsAggregateType<T>>
+
+    /**
+     * Group by GroupRequests.
+     * Note, that providing `undefined` is treated as the value not being there.
+     * Read more here: https://pris.ly/d/null-undefined
+     * @param {GroupRequestsGroupByArgs} args - Group by arguments.
+     * @example
+     * // Group by city, order by createdAt, get count
+     * const result = await prisma.user.groupBy({
+     *   by: ['city', 'createdAt'],
+     *   orderBy: {
+     *     createdAt: true
+     *   },
+     *   _count: {
+     *     _all: true
+     *   },
+     * })
+     * 
+    **/
+    groupBy<
+      T extends GroupRequestsGroupByArgs,
+      HasSelectOrTake extends Or<
+        Extends<'skip', Keys<T>>,
+        Extends<'take', Keys<T>>
+      >,
+      OrderByArg extends True extends HasSelectOrTake
+        ? { orderBy: GroupRequestsGroupByArgs['orderBy'] }
+        : { orderBy?: GroupRequestsGroupByArgs['orderBy'] },
+      OrderFields extends ExcludeUnderscoreKeys<Keys<MaybeTupleToUnion<T['orderBy']>>>,
+      ByFields extends MaybeTupleToUnion<T['by']>,
+      ByValid extends Has<ByFields, OrderFields>,
+      HavingFields extends GetHavingFields<T['having']>,
+      HavingValid extends Has<ByFields, HavingFields>,
+      ByEmpty extends T['by'] extends never[] ? True : False,
+      InputErrors extends ByEmpty extends True
+      ? `Error: "by" must not be empty.`
+      : HavingValid extends False
+      ? {
+          [P in HavingFields]: P extends ByFields
+            ? never
+            : P extends string
+            ? `Error: Field "${P}" used in "having" needs to be provided in "by".`
+            : [
+                Error,
+                'Field ',
+                P,
+                ` in "having" needs to be provided in "by"`,
+              ]
+        }[HavingFields]
+      : 'take' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "take", you also need to provide "orderBy"'
+      : 'skip' extends Keys<T>
+      ? 'orderBy' extends Keys<T>
+        ? ByValid extends True
+          ? {}
+          : {
+              [P in OrderFields]: P extends ByFields
+                ? never
+                : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+            }[OrderFields]
+        : 'Error: If you provide "skip", you also need to provide "orderBy"'
+      : ByValid extends True
+      ? {}
+      : {
+          [P in OrderFields]: P extends ByFields
+            ? never
+            : `Error: Field "${P}" in "orderBy" needs to be provided in "by"`
+        }[OrderFields]
+    >(args: SubsetIntersection<T, GroupRequestsGroupByArgs, OrderByArg> & InputErrors): {} extends InputErrors ? GetGroupRequestsGroupByPayload<T> : Prisma.PrismaPromise<InputErrors>
+  /**
+   * Fields of the GroupRequests model
+   */
+  readonly fields: GroupRequestsFieldRefs;
+  }
+
+  /**
+   * The delegate class that acts as a "Promise-like" for GroupRequests.
+   * Why is this prefixed with `Prisma__`?
+   * Because we want to prevent naming conflicts as mentioned in
+   * https://github.com/prisma/prisma-client-js/issues/707
+   */
+  export interface Prisma__GroupRequestsClient<T, Null = never, ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
+    readonly [Symbol.toStringTag]: "PrismaPromise"
+    /**
+     * Attaches callbacks for the resolution and/or rejection of the Promise.
+     * @param onfulfilled The callback to execute when the Promise is resolved.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of which ever callback is executed.
+     */
+    then<TResult1 = T, TResult2 = never>(onfulfilled?: ((value: T) => TResult1 | PromiseLike<TResult1>) | undefined | null, onrejected?: ((reason: any) => TResult2 | PromiseLike<TResult2>) | undefined | null): $Utils.JsPromise<TResult1 | TResult2>
+    /**
+     * Attaches a callback for only the rejection of the Promise.
+     * @param onrejected The callback to execute when the Promise is rejected.
+     * @returns A Promise for the completion of the callback.
+     */
+    catch<TResult = never>(onrejected?: ((reason: any) => TResult | PromiseLike<TResult>) | undefined | null): $Utils.JsPromise<T | TResult>
+    /**
+     * Attaches a callback that is invoked when the Promise is settled (fulfilled or rejected). The
+     * resolved value cannot be modified from the callback.
+     * @param onfinally The callback to execute when the Promise is settled (fulfilled or rejected).
+     * @returns A Promise for the completion of the callback.
+     */
+    finally(onfinally?: (() => void) | undefined | null): $Utils.JsPromise<T>
+  }
+
+
+
+
+  /**
+   * Fields of the GroupRequests model
+   */
+  interface GroupRequestsFieldRefs {
+    readonly id: FieldRef<"GroupRequests", 'String'>
+    readonly conversationId: FieldRef<"GroupRequests", 'String'>
+    readonly userId: FieldRef<"GroupRequests", 'String'>
+  }
+    
+
+  // Custom InputTypes
+  /**
+   * GroupRequests findUnique
+   */
+  export type GroupRequestsFindUniqueArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupRequests
+     */
+    select?: GroupRequestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupRequests
+     */
+    omit?: GroupRequestsOmit<ExtArgs> | null
+    /**
+     * Filter, which GroupRequests to fetch.
+     */
+    where: GroupRequestsWhereUniqueInput
+  }
+
+  /**
+   * GroupRequests findUniqueOrThrow
+   */
+  export type GroupRequestsFindUniqueOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupRequests
+     */
+    select?: GroupRequestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupRequests
+     */
+    omit?: GroupRequestsOmit<ExtArgs> | null
+    /**
+     * Filter, which GroupRequests to fetch.
+     */
+    where: GroupRequestsWhereUniqueInput
+  }
+
+  /**
+   * GroupRequests findFirst
+   */
+  export type GroupRequestsFindFirstArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupRequests
+     */
+    select?: GroupRequestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupRequests
+     */
+    omit?: GroupRequestsOmit<ExtArgs> | null
+    /**
+     * Filter, which GroupRequests to fetch.
+     */
+    where?: GroupRequestsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupRequests to fetch.
+     */
+    orderBy?: GroupRequestsOrderByWithRelationInput | GroupRequestsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GroupRequests.
+     */
+    cursor?: GroupRequestsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GroupRequests.
+     */
+    distinct?: GroupRequestsScalarFieldEnum | GroupRequestsScalarFieldEnum[]
+  }
+
+  /**
+   * GroupRequests findFirstOrThrow
+   */
+  export type GroupRequestsFindFirstOrThrowArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupRequests
+     */
+    select?: GroupRequestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupRequests
+     */
+    omit?: GroupRequestsOmit<ExtArgs> | null
+    /**
+     * Filter, which GroupRequests to fetch.
+     */
+    where?: GroupRequestsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupRequests to fetch.
+     */
+    orderBy?: GroupRequestsOrderByWithRelationInput | GroupRequestsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for searching for GroupRequests.
+     */
+    cursor?: GroupRequestsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupRequests.
+     */
+    skip?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
+     * 
+     * Filter by unique combinations of GroupRequests.
+     */
+    distinct?: GroupRequestsScalarFieldEnum | GroupRequestsScalarFieldEnum[]
+  }
+
+  /**
+   * GroupRequests findMany
+   */
+  export type GroupRequestsFindManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupRequests
+     */
+    select?: GroupRequestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupRequests
+     */
+    omit?: GroupRequestsOmit<ExtArgs> | null
+    /**
+     * Filter, which GroupRequests to fetch.
+     */
+    where?: GroupRequestsWhereInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/sorting Sorting Docs}
+     * 
+     * Determine the order of GroupRequests to fetch.
+     */
+    orderBy?: GroupRequestsOrderByWithRelationInput | GroupRequestsOrderByWithRelationInput[]
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
+     * 
+     * Sets the position for listing GroupRequests.
+     */
+    cursor?: GroupRequestsWhereUniqueInput
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Take `±n` GroupRequests from the position of the cursor.
+     */
+    take?: number
+    /**
+     * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
+     * 
+     * Skip the first `n` GroupRequests.
+     */
+    skip?: number
+    distinct?: GroupRequestsScalarFieldEnum | GroupRequestsScalarFieldEnum[]
+  }
+
+  /**
+   * GroupRequests create
+   */
+  export type GroupRequestsCreateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupRequests
+     */
+    select?: GroupRequestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupRequests
+     */
+    omit?: GroupRequestsOmit<ExtArgs> | null
+    /**
+     * The data needed to create a GroupRequests.
+     */
+    data: XOR<GroupRequestsCreateInput, GroupRequestsUncheckedCreateInput>
+  }
+
+  /**
+   * GroupRequests createMany
+   */
+  export type GroupRequestsCreateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to create many GroupRequests.
+     */
+    data: GroupRequestsCreateManyInput | GroupRequestsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GroupRequests createManyAndReturn
+   */
+  export type GroupRequestsCreateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupRequests
+     */
+    select?: GroupRequestsSelectCreateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupRequests
+     */
+    omit?: GroupRequestsOmit<ExtArgs> | null
+    /**
+     * The data used to create many GroupRequests.
+     */
+    data: GroupRequestsCreateManyInput | GroupRequestsCreateManyInput[]
+    skipDuplicates?: boolean
+  }
+
+  /**
+   * GroupRequests update
+   */
+  export type GroupRequestsUpdateArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupRequests
+     */
+    select?: GroupRequestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupRequests
+     */
+    omit?: GroupRequestsOmit<ExtArgs> | null
+    /**
+     * The data needed to update a GroupRequests.
+     */
+    data: XOR<GroupRequestsUpdateInput, GroupRequestsUncheckedUpdateInput>
+    /**
+     * Choose, which GroupRequests to update.
+     */
+    where: GroupRequestsWhereUniqueInput
+  }
+
+  /**
+   * GroupRequests updateMany
+   */
+  export type GroupRequestsUpdateManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * The data used to update GroupRequests.
+     */
+    data: XOR<GroupRequestsUpdateManyMutationInput, GroupRequestsUncheckedUpdateManyInput>
+    /**
+     * Filter which GroupRequests to update
+     */
+    where?: GroupRequestsWhereInput
+    /**
+     * Limit how many GroupRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GroupRequests updateManyAndReturn
+   */
+  export type GroupRequestsUpdateManyAndReturnArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupRequests
+     */
+    select?: GroupRequestsSelectUpdateManyAndReturn<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupRequests
+     */
+    omit?: GroupRequestsOmit<ExtArgs> | null
+    /**
+     * The data used to update GroupRequests.
+     */
+    data: XOR<GroupRequestsUpdateManyMutationInput, GroupRequestsUncheckedUpdateManyInput>
+    /**
+     * Filter which GroupRequests to update
+     */
+    where?: GroupRequestsWhereInput
+    /**
+     * Limit how many GroupRequests to update.
+     */
+    limit?: number
+  }
+
+  /**
+   * GroupRequests upsert
+   */
+  export type GroupRequestsUpsertArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupRequests
+     */
+    select?: GroupRequestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupRequests
+     */
+    omit?: GroupRequestsOmit<ExtArgs> | null
+    /**
+     * The filter to search for the GroupRequests to update in case it exists.
+     */
+    where: GroupRequestsWhereUniqueInput
+    /**
+     * In case the GroupRequests found by the `where` argument doesn't exist, create a new GroupRequests with this data.
+     */
+    create: XOR<GroupRequestsCreateInput, GroupRequestsUncheckedCreateInput>
+    /**
+     * In case the GroupRequests was found with the provided `where` argument, update it with this data.
+     */
+    update: XOR<GroupRequestsUpdateInput, GroupRequestsUncheckedUpdateInput>
+  }
+
+  /**
+   * GroupRequests delete
+   */
+  export type GroupRequestsDeleteArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupRequests
+     */
+    select?: GroupRequestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupRequests
+     */
+    omit?: GroupRequestsOmit<ExtArgs> | null
+    /**
+     * Filter which GroupRequests to delete.
+     */
+    where: GroupRequestsWhereUniqueInput
+  }
+
+  /**
+   * GroupRequests deleteMany
+   */
+  export type GroupRequestsDeleteManyArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Filter which GroupRequests to delete
+     */
+    where?: GroupRequestsWhereInput
+    /**
+     * Limit how many GroupRequests to delete.
+     */
+    limit?: number
+  }
+
+  /**
+   * GroupRequests without action
+   */
+  export type GroupRequestsDefaultArgs<ExtArgs extends $Extensions.InternalArgs = $Extensions.DefaultArgs> = {
+    /**
+     * Select specific fields to fetch from the GroupRequests
+     */
+    select?: GroupRequestsSelect<ExtArgs> | null
+    /**
+     * Omit specific fields from the GroupRequests
+     */
+    omit?: GroupRequestsOmit<ExtArgs> | null
+  }
+
+
+  /**
    * Enums
    */
 
@@ -5331,7 +6391,6 @@ export namespace Prisma {
     passowrd: 'passowrd',
     bio: 'bio',
     profileImage: 'profileImage',
-    isOnline: 'isOnline',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -5341,11 +6400,12 @@ export namespace Prisma {
 
   export const ConversationsScalarFieldEnum: {
     id: 'id',
-    cretedBy: 'cretedBy',
+    createrId: 'createrId',
     type: 'type',
     name: 'name',
     bio: 'bio',
     bannerImage: 'bannerImage',
+    isPublic: 'isPublic',
     createdAt: 'createdAt',
     updatedAt: 'updatedAt'
   };
@@ -5378,6 +6438,15 @@ export namespace Prisma {
   };
 
   export type MessagesScalarFieldEnum = (typeof MessagesScalarFieldEnum)[keyof typeof MessagesScalarFieldEnum]
+
+
+  export const GroupRequestsScalarFieldEnum: {
+    id: 'id',
+    conversationId: 'conversationId',
+    userId: 'userId'
+  };
+
+  export type GroupRequestsScalarFieldEnum = (typeof GroupRequestsScalarFieldEnum)[keyof typeof GroupRequestsScalarFieldEnum]
 
 
   export const SortOrder: {
@@ -5424,13 +6493,6 @@ export namespace Prisma {
 
 
   /**
-   * Reference to a field of type 'Boolean'
-   */
-  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
-    
-
-
-  /**
    * Reference to a field of type 'DateTime'
    */
   export type DateTimeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'DateTime'>
@@ -5455,6 +6517,13 @@ export namespace Prisma {
    * Reference to a field of type 'ConversationTypes[]'
    */
   export type ListEnumConversationTypesFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'ConversationTypes[]'>
+    
+
+
+  /**
+   * Reference to a field of type 'Boolean'
+   */
+  export type BooleanFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'Boolean'>
     
 
 
@@ -5513,7 +6582,6 @@ export namespace Prisma {
     passowrd?: StringFilter<"Users"> | string
     bio?: StringFilter<"Users"> | string
     profileImage?: StringNullableFilter<"Users"> | string | null
-    isOnline?: BoolFilter<"Users"> | boolean
     createdAt?: DateTimeFilter<"Users"> | Date | string
     updatedAt?: DateTimeFilter<"Users"> | Date | string
   }
@@ -5525,7 +6593,6 @@ export namespace Prisma {
     passowrd?: SortOrder
     bio?: SortOrder
     profileImage?: SortOrderInput | SortOrder
-    isOnline?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -5540,7 +6607,6 @@ export namespace Prisma {
     passowrd?: StringFilter<"Users"> | string
     bio?: StringFilter<"Users"> | string
     profileImage?: StringNullableFilter<"Users"> | string | null
-    isOnline?: BoolFilter<"Users"> | boolean
     createdAt?: DateTimeFilter<"Users"> | Date | string
     updatedAt?: DateTimeFilter<"Users"> | Date | string
   }, "username" | "email">
@@ -5552,7 +6618,6 @@ export namespace Prisma {
     passowrd?: SortOrder
     bio?: SortOrder
     profileImage?: SortOrderInput | SortOrder
-    isOnline?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: UsersCountOrderByAggregateInput
@@ -5570,7 +6635,6 @@ export namespace Prisma {
     passowrd?: StringWithAggregatesFilter<"Users"> | string
     bio?: StringWithAggregatesFilter<"Users"> | string
     profileImage?: StringNullableWithAggregatesFilter<"Users"> | string | null
-    isOnline?: BoolWithAggregatesFilter<"Users"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Users"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Users"> | Date | string
   }
@@ -5580,22 +6644,24 @@ export namespace Prisma {
     OR?: ConversationsWhereInput[]
     NOT?: ConversationsWhereInput | ConversationsWhereInput[]
     id?: StringFilter<"Conversations"> | string
-    cretedBy?: StringFilter<"Conversations"> | string
+    createrId?: StringFilter<"Conversations"> | string
     type?: EnumConversationTypesFilter<"Conversations"> | $Enums.ConversationTypes
-    name?: StringFilter<"Conversations"> | string
+    name?: StringNullableFilter<"Conversations"> | string | null
     bio?: StringNullableFilter<"Conversations"> | string | null
     bannerImage?: StringNullableFilter<"Conversations"> | string | null
+    isPublic?: BoolFilter<"Conversations"> | boolean
     createdAt?: DateTimeFilter<"Conversations"> | Date | string
     updatedAt?: DateTimeFilter<"Conversations"> | Date | string
   }
 
   export type ConversationsOrderByWithRelationInput = {
     id?: SortOrder
-    cretedBy?: SortOrder
+    createrId?: SortOrder
     type?: SortOrder
-    name?: SortOrder
+    name?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
     bannerImage?: SortOrderInput | SortOrder
+    isPublic?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -5605,22 +6671,24 @@ export namespace Prisma {
     AND?: ConversationsWhereInput | ConversationsWhereInput[]
     OR?: ConversationsWhereInput[]
     NOT?: ConversationsWhereInput | ConversationsWhereInput[]
-    cretedBy?: StringFilter<"Conversations"> | string
+    createrId?: StringFilter<"Conversations"> | string
     type?: EnumConversationTypesFilter<"Conversations"> | $Enums.ConversationTypes
-    name?: StringFilter<"Conversations"> | string
+    name?: StringNullableFilter<"Conversations"> | string | null
     bio?: StringNullableFilter<"Conversations"> | string | null
     bannerImage?: StringNullableFilter<"Conversations"> | string | null
+    isPublic?: BoolFilter<"Conversations"> | boolean
     createdAt?: DateTimeFilter<"Conversations"> | Date | string
     updatedAt?: DateTimeFilter<"Conversations"> | Date | string
   }, "id">
 
   export type ConversationsOrderByWithAggregationInput = {
     id?: SortOrder
-    cretedBy?: SortOrder
+    createrId?: SortOrder
     type?: SortOrder
-    name?: SortOrder
+    name?: SortOrderInput | SortOrder
     bio?: SortOrderInput | SortOrder
     bannerImage?: SortOrderInput | SortOrder
+    isPublic?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
     _count?: ConversationsCountOrderByAggregateInput
@@ -5633,11 +6701,12 @@ export namespace Prisma {
     OR?: ConversationsScalarWhereWithAggregatesInput[]
     NOT?: ConversationsScalarWhereWithAggregatesInput | ConversationsScalarWhereWithAggregatesInput[]
     id?: StringWithAggregatesFilter<"Conversations"> | string
-    cretedBy?: StringWithAggregatesFilter<"Conversations"> | string
+    createrId?: StringWithAggregatesFilter<"Conversations"> | string
     type?: EnumConversationTypesWithAggregatesFilter<"Conversations"> | $Enums.ConversationTypes
-    name?: StringWithAggregatesFilter<"Conversations"> | string
+    name?: StringNullableWithAggregatesFilter<"Conversations"> | string | null
     bio?: StringNullableWithAggregatesFilter<"Conversations"> | string | null
     bannerImage?: StringNullableWithAggregatesFilter<"Conversations"> | string | null
+    isPublic?: BoolWithAggregatesFilter<"Conversations"> | boolean
     createdAt?: DateTimeWithAggregatesFilter<"Conversations"> | Date | string
     updatedAt?: DateTimeWithAggregatesFilter<"Conversations"> | Date | string
   }
@@ -5771,14 +6840,55 @@ export namespace Prisma {
     updatedAt?: DateTimeWithAggregatesFilter<"Messages"> | Date | string
   }
 
+  export type GroupRequestsWhereInput = {
+    AND?: GroupRequestsWhereInput | GroupRequestsWhereInput[]
+    OR?: GroupRequestsWhereInput[]
+    NOT?: GroupRequestsWhereInput | GroupRequestsWhereInput[]
+    id?: StringFilter<"GroupRequests"> | string
+    conversationId?: StringFilter<"GroupRequests"> | string
+    userId?: StringFilter<"GroupRequests"> | string
+  }
+
+  export type GroupRequestsOrderByWithRelationInput = {
+    id?: SortOrder
+    conversationId?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type GroupRequestsWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
+    AND?: GroupRequestsWhereInput | GroupRequestsWhereInput[]
+    OR?: GroupRequestsWhereInput[]
+    NOT?: GroupRequestsWhereInput | GroupRequestsWhereInput[]
+    conversationId?: StringFilter<"GroupRequests"> | string
+    userId?: StringFilter<"GroupRequests"> | string
+  }, "id">
+
+  export type GroupRequestsOrderByWithAggregationInput = {
+    id?: SortOrder
+    conversationId?: SortOrder
+    userId?: SortOrder
+    _count?: GroupRequestsCountOrderByAggregateInput
+    _max?: GroupRequestsMaxOrderByAggregateInput
+    _min?: GroupRequestsMinOrderByAggregateInput
+  }
+
+  export type GroupRequestsScalarWhereWithAggregatesInput = {
+    AND?: GroupRequestsScalarWhereWithAggregatesInput | GroupRequestsScalarWhereWithAggregatesInput[]
+    OR?: GroupRequestsScalarWhereWithAggregatesInput[]
+    NOT?: GroupRequestsScalarWhereWithAggregatesInput | GroupRequestsScalarWhereWithAggregatesInput[]
+    id?: StringWithAggregatesFilter<"GroupRequests"> | string
+    conversationId?: StringWithAggregatesFilter<"GroupRequests"> | string
+    userId?: StringWithAggregatesFilter<"GroupRequests"> | string
+  }
+
   export type UsersCreateInput = {
     id?: string
     username: string
     email: string
     passowrd: string
-    bio: string
+    bio?: string
     profileImage?: string | null
-    isOnline?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -5788,9 +6898,8 @@ export namespace Prisma {
     username: string
     email: string
     passowrd: string
-    bio: string
+    bio?: string
     profileImage?: string | null
-    isOnline?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -5802,7 +6911,6 @@ export namespace Prisma {
     passowrd?: StringFieldUpdateOperationsInput | string
     bio?: StringFieldUpdateOperationsInput | string
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
-    isOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -5814,7 +6922,6 @@ export namespace Prisma {
     passowrd?: StringFieldUpdateOperationsInput | string
     bio?: StringFieldUpdateOperationsInput | string
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
-    isOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -5824,9 +6931,8 @@ export namespace Prisma {
     username: string
     email: string
     passowrd: string
-    bio: string
+    bio?: string
     profileImage?: string | null
-    isOnline?: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
@@ -5838,7 +6944,6 @@ export namespace Prisma {
     passowrd?: StringFieldUpdateOperationsInput | string
     bio?: StringFieldUpdateOperationsInput | string
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
-    isOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -5850,84 +6955,90 @@ export namespace Prisma {
     passowrd?: StringFieldUpdateOperationsInput | string
     bio?: StringFieldUpdateOperationsInput | string
     profileImage?: NullableStringFieldUpdateOperationsInput | string | null
-    isOnline?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ConversationsCreateInput = {
     id?: string
-    cretedBy: string
+    createrId: string
     type: $Enums.ConversationTypes
-    name: string
+    name?: string | null
     bio?: string | null
     bannerImage?: string | null
+    isPublic: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type ConversationsUncheckedCreateInput = {
     id?: string
-    cretedBy: string
+    createrId: string
     type: $Enums.ConversationTypes
-    name: string
+    name?: string | null
     bio?: string | null
     bannerImage?: string | null
+    isPublic: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type ConversationsUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    cretedBy?: StringFieldUpdateOperationsInput | string
+    createrId?: StringFieldUpdateOperationsInput | string
     type?: EnumConversationTypesFieldUpdateOperationsInput | $Enums.ConversationTypes
-    name?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ConversationsUncheckedUpdateInput = {
     id?: StringFieldUpdateOperationsInput | string
-    cretedBy?: StringFieldUpdateOperationsInput | string
+    createrId?: StringFieldUpdateOperationsInput | string
     type?: EnumConversationTypesFieldUpdateOperationsInput | $Enums.ConversationTypes
-    name?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ConversationsCreateManyInput = {
     id?: string
-    cretedBy: string
+    createrId: string
     type: $Enums.ConversationTypes
-    name: string
+    name?: string | null
     bio?: string | null
     bannerImage?: string | null
+    isPublic: boolean
     createdAt?: Date | string
     updatedAt?: Date | string
   }
 
   export type ConversationsUpdateManyMutationInput = {
     id?: StringFieldUpdateOperationsInput | string
-    cretedBy?: StringFieldUpdateOperationsInput | string
+    createrId?: StringFieldUpdateOperationsInput | string
     type?: EnumConversationTypesFieldUpdateOperationsInput | $Enums.ConversationTypes
-    name?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
   export type ConversationsUncheckedUpdateManyInput = {
     id?: StringFieldUpdateOperationsInput | string
-    cretedBy?: StringFieldUpdateOperationsInput | string
+    createrId?: StringFieldUpdateOperationsInput | string
     type?: EnumConversationTypesFieldUpdateOperationsInput | $Enums.ConversationTypes
-    name?: StringFieldUpdateOperationsInput | string
+    name?: NullableStringFieldUpdateOperationsInput | string | null
     bio?: NullableStringFieldUpdateOperationsInput | string | null
     bannerImage?: NullableStringFieldUpdateOperationsInput | string | null
+    isPublic?: BoolFieldUpdateOperationsInput | boolean
     createdAt?: DateTimeFieldUpdateOperationsInput | Date | string
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
@@ -6079,6 +7190,48 @@ export namespace Prisma {
     updatedAt?: DateTimeFieldUpdateOperationsInput | Date | string
   }
 
+  export type GroupRequestsCreateInput = {
+    id?: string
+    conversationId: string
+    userId: string
+  }
+
+  export type GroupRequestsUncheckedCreateInput = {
+    id?: string
+    conversationId: string
+    userId: string
+  }
+
+  export type GroupRequestsUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    conversationId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GroupRequestsUncheckedUpdateInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    conversationId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GroupRequestsCreateManyInput = {
+    id?: string
+    conversationId: string
+    userId: string
+  }
+
+  export type GroupRequestsUpdateManyMutationInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    conversationId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
+  export type GroupRequestsUncheckedUpdateManyInput = {
+    id?: StringFieldUpdateOperationsInput | string
+    conversationId?: StringFieldUpdateOperationsInput | string
+    userId?: StringFieldUpdateOperationsInput | string
+  }
+
   export type StringFilter<$PrismaModel = never> = {
     equals?: string | StringFieldRefInput<$PrismaModel>
     in?: string[] | ListStringFieldRefInput<$PrismaModel>
@@ -6109,11 +7262,6 @@ export namespace Prisma {
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
   }
 
-  export type BoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
-  }
-
   export type DateTimeFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -6137,7 +7285,6 @@ export namespace Prisma {
     passowrd?: SortOrder
     bio?: SortOrder
     profileImage?: SortOrder
-    isOnline?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6149,7 +7296,6 @@ export namespace Prisma {
     passowrd?: SortOrder
     bio?: SortOrder
     profileImage?: SortOrder
-    isOnline?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6161,7 +7307,6 @@ export namespace Prisma {
     passowrd?: SortOrder
     bio?: SortOrder
     profileImage?: SortOrder
-    isOnline?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6202,14 +7347,6 @@ export namespace Prisma {
     _max?: NestedStringNullableFilter<$PrismaModel>
   }
 
-  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
   export type DateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -6231,35 +7368,43 @@ export namespace Prisma {
     not?: NestedEnumConversationTypesFilter<$PrismaModel> | $Enums.ConversationTypes
   }
 
+  export type BoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type ConversationsCountOrderByAggregateInput = {
     id?: SortOrder
-    cretedBy?: SortOrder
+    createrId?: SortOrder
     type?: SortOrder
     name?: SortOrder
     bio?: SortOrder
     bannerImage?: SortOrder
+    isPublic?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type ConversationsMaxOrderByAggregateInput = {
     id?: SortOrder
-    cretedBy?: SortOrder
+    createrId?: SortOrder
     type?: SortOrder
     name?: SortOrder
     bio?: SortOrder
     bannerImage?: SortOrder
+    isPublic?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
 
   export type ConversationsMinOrderByAggregateInput = {
     id?: SortOrder
-    cretedBy?: SortOrder
+    createrId?: SortOrder
     type?: SortOrder
     name?: SortOrder
     bio?: SortOrder
     bannerImage?: SortOrder
+    isPublic?: SortOrder
     createdAt?: SortOrder
     updatedAt?: SortOrder
   }
@@ -6272,6 +7417,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumConversationTypesFilter<$PrismaModel>
     _max?: NestedEnumConversationTypesFilter<$PrismaModel>
+  }
+
+  export type BoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type EnumConversationRolesFilter<$PrismaModel = never> = {
@@ -6371,6 +7524,24 @@ export namespace Prisma {
     _max?: NestedEnumMessageTypesFilter<$PrismaModel>
   }
 
+  export type GroupRequestsCountOrderByAggregateInput = {
+    id?: SortOrder
+    conversationId?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type GroupRequestsMaxOrderByAggregateInput = {
+    id?: SortOrder
+    conversationId?: SortOrder
+    userId?: SortOrder
+  }
+
+  export type GroupRequestsMinOrderByAggregateInput = {
+    id?: SortOrder
+    conversationId?: SortOrder
+    userId?: SortOrder
+  }
+
   export type StringFieldUpdateOperationsInput = {
     set?: string
   }
@@ -6379,16 +7550,16 @@ export namespace Prisma {
     set?: string | null
   }
 
-  export type BoolFieldUpdateOperationsInput = {
-    set?: boolean
-  }
-
   export type DateTimeFieldUpdateOperationsInput = {
     set?: Date | string
   }
 
   export type EnumConversationTypesFieldUpdateOperationsInput = {
     set?: $Enums.ConversationTypes
+  }
+
+  export type BoolFieldUpdateOperationsInput = {
+    set?: boolean
   }
 
   export type EnumConversationRolesFieldUpdateOperationsInput = {
@@ -6425,11 +7596,6 @@ export namespace Prisma {
     startsWith?: string | StringFieldRefInput<$PrismaModel>
     endsWith?: string | StringFieldRefInput<$PrismaModel>
     not?: NestedStringNullableFilter<$PrismaModel> | string | null
-  }
-
-  export type NestedBoolFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolFilter<$PrismaModel> | boolean
   }
 
   export type NestedDateTimeFilter<$PrismaModel = never> = {
@@ -6499,14 +7665,6 @@ export namespace Prisma {
     not?: NestedIntNullableFilter<$PrismaModel> | number | null
   }
 
-  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
-    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
-    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
-    _count?: NestedIntFilter<$PrismaModel>
-    _min?: NestedBoolFilter<$PrismaModel>
-    _max?: NestedBoolFilter<$PrismaModel>
-  }
-
   export type NestedDateTimeWithAggregatesFilter<$PrismaModel = never> = {
     equals?: Date | string | DateTimeFieldRefInput<$PrismaModel>
     in?: Date[] | string[] | ListDateTimeFieldRefInput<$PrismaModel>
@@ -6528,6 +7686,11 @@ export namespace Prisma {
     not?: NestedEnumConversationTypesFilter<$PrismaModel> | $Enums.ConversationTypes
   }
 
+  export type NestedBoolFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolFilter<$PrismaModel> | boolean
+  }
+
   export type NestedEnumConversationTypesWithAggregatesFilter<$PrismaModel = never> = {
     equals?: $Enums.ConversationTypes | EnumConversationTypesFieldRefInput<$PrismaModel>
     in?: $Enums.ConversationTypes[] | ListEnumConversationTypesFieldRefInput<$PrismaModel>
@@ -6536,6 +7699,14 @@ export namespace Prisma {
     _count?: NestedIntFilter<$PrismaModel>
     _min?: NestedEnumConversationTypesFilter<$PrismaModel>
     _max?: NestedEnumConversationTypesFilter<$PrismaModel>
+  }
+
+  export type NestedBoolWithAggregatesFilter<$PrismaModel = never> = {
+    equals?: boolean | BooleanFieldRefInput<$PrismaModel>
+    not?: NestedBoolWithAggregatesFilter<$PrismaModel> | boolean
+    _count?: NestedIntFilter<$PrismaModel>
+    _min?: NestedBoolFilter<$PrismaModel>
+    _max?: NestedBoolFilter<$PrismaModel>
   }
 
   export type NestedEnumConversationRolesFilter<$PrismaModel = never> = {

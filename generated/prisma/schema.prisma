@@ -8,28 +8,26 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-// this is a read heavy table
 model Users {
   id           String  @default(uuid()) // this can be index
   username     String  @unique
   email        String  @unique // this could be the index
   passowrd     String
-  bio          String
+  bio          String  @default("Hey there.")
   profileImage String?
-  isOnline     Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
 }
 
-// this i also a read heavy table
 model Conversations {
   id          String            @unique @default(uuid()) // this can be index
-  cretedBy    String
+  createrId   String
   type        ConversationTypes
-  name        String
+  name        String?
   bio         String?
   bannerImage String?
+  isPublic    Boolean
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
@@ -67,6 +65,12 @@ model Messages {
 
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now())
+}
+
+model GroupRequests {
+  id             String @unique @default(uuid())
+  conversationId String
+  userId         String
 }
 
 enum MessageTypes {

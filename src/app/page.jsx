@@ -1,5 +1,9 @@
-function Home() {
-  return <div>home</div>;
-}
+import Search from "@/components/Search";
 
-export default Home;
+export default function page() {
+  return (
+    <div>
+      <Search />
+    </div>
+  );
+}

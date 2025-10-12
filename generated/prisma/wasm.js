@@ -99,18 +99,18 @@ exports.Prisma.UsersScalarFieldEnum = {
   passowrd: 'passowrd',
   bio: 'bio',
   profileImage: 'profileImage',
-  isOnline: 'isOnline',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
 
 exports.Prisma.ConversationsScalarFieldEnum = {
   id: 'id',
-  cretedBy: 'cretedBy',
+  createrId: 'createrId',
   type: 'type',
   name: 'name',
   bio: 'bio',
   bannerImage: 'bannerImage',
+  isPublic: 'isPublic',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 };
@@ -134,6 +134,12 @@ exports.Prisma.MessagesScalarFieldEnum = {
   imageUrl: 'imageUrl',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
+};
+
+exports.Prisma.GroupRequestsScalarFieldEnum = {
+  id: 'id',
+  conversationId: 'conversationId',
+  userId: 'userId'
 };
 
 exports.Prisma.SortOrder = {
@@ -169,7 +175,8 @@ exports.Prisma.ModelName = {
   Users: 'Users',
   Conversations: 'Conversations',
   ConversationMembers: 'ConversationMembers',
-  Messages: 'Messages'
+  Messages: 'Messages',
+  GroupRequests: 'GroupRequests'
 };
 /**
  * Create the Client
@@ -219,13 +226,13 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../app/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\n// this is a read heavy table\nmodel Users {\n  id           String  @default(uuid()) // this can be index\n  username     String  @unique\n  email        String  @unique // this could be the index\n  passowrd     String\n  bio          String\n  profileImage String?\n  isOnline     Boolean @default(false)\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now())\n}\n\n// this i also a read heavy table\nmodel Conversations {\n  id          String            @unique @default(uuid()) // this can be index\n  cretedBy    String\n  type        ConversationTypes\n  name        String\n  bio         String?\n  bannerImage String?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now())\n}\n\nenum ConversationTypes {\n  direct\n  group\n}\n\nmodel ConversationMembers {\n  id             String            @unique @default(uuid())\n  conversationId String\n  userId         String\n  joinedAt       DateTime          @default(now())\n  role           ConversationRoles\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now())\n}\n\nenum ConversationRoles {\n  member\n  admin\n}\n\n// this is a write heavy table\nmodel Messages {\n  id             String       @unique @default(uuid())\n  conversationId String\n  senderId       String\n  type           MessageTypes\n  content        String\n  imageUrl       String\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now())\n}\n\nenum MessageTypes {\n  text\n  image\n}\n",
-  "inlineSchemaHash": "5d82a671107d235ea8b37cde02be22aaaa1b8514dea806c027a6305c1c7fa178",
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../app/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Users {\n  id           String  @default(uuid()) // this can be index\n  username     String  @unique\n  email        String  @unique // this could be the index\n  passowrd     String\n  bio          String  @default(\"Hey there.\")\n  profileImage String?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now())\n}\n\nmodel Conversations {\n  id          String            @unique @default(uuid()) // this can be index\n  createrId   String\n  type        ConversationTypes\n  name        String?\n  bio         String?\n  bannerImage String?\n  isPublic    Boolean\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now())\n}\n\nenum ConversationTypes {\n  direct\n  group\n}\n\nmodel ConversationMembers {\n  id             String            @unique @default(uuid())\n  conversationId String\n  userId         String\n  joinedAt       DateTime          @default(now())\n  role           ConversationRoles\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now())\n}\n\nenum ConversationRoles {\n  member\n  admin\n}\n\n// this is a write heavy table\nmodel Messages {\n  id             String       @unique @default(uuid())\n  conversationId String\n  senderId       String\n  type           MessageTypes\n  content        String\n  imageUrl       String\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now())\n}\n\nmodel GroupRequests {\n  id             String @unique @default(uuid())\n  conversationId String\n  userId         String\n}\n\nenum MessageTypes {\n  text\n  image\n}\n",
+  "inlineSchemaHash": "abf50c35132e712ef5bdd5ccf4830f5e532595616d6920f6a1fb2d9600ab2583",
   "copyEngine": true
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Users\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"passowrd\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bio\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"profileImage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isOnline\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Conversations\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"cretedBy\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"ConversationTypes\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bio\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bannerImage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"ConversationMembers\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"conversationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"joinedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"ConversationRoles\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Messages\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"conversationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"senderId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"MessageTypes\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"imageUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Users\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"passowrd\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bio\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"profileImage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Conversations\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createrId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"ConversationTypes\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bio\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bannerImage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isPublic\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"ConversationMembers\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"conversationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"joinedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"ConversationRoles\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Messages\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"conversationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"senderId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"MessageTypes\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"imageUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"GroupRequests\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"conversationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
 config.engineWasm = {
   getRuntime: async () => require('./query_engine_bg.js'),
