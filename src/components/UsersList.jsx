@@ -4,10 +4,10 @@ import { getUsers } from "@/utils/apis/users.js";
 
 import { User } from "lucide-react";
 
-export default function UsersList() {
+export default function UsersList({ searchedUserList }) {
   const { isLoading, error, data: users } = useFetch(getUsers);
 
-  console.log("users: ", users);
+  const allUsers = [...searchedUserList, ...(users || [])];
 
   return (
     <div>
@@ -15,8 +15,8 @@ export default function UsersList() {
         <Loader />
       ) : (
         <>
-          {users?.length > 0 ? (
-            users?.map((user) => (
+          {allUsers?.length > 0 ? (
+            allUsers?.map((user) => (
               <div
                 key={user.id}
                 className="px-4 py-3 hover:bg-gray-50 transition-colors flex items-center justify-between border-gray-200 border rounded-lg my-1"
@@ -33,7 +33,9 @@ export default function UsersList() {
                   )}
                   <div>
                     {/* <h3 className="font-medium text-gray-900">{user.name}</h3> */}
-                    <p className="font-medium text-gray-900">{user.username}</p>
+                    <p className="font-medium text-sm text-gray-700">
+                      @{user.username}
+                    </p>
                   </div>
                 </div>
                 <button

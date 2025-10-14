@@ -6598,18 +6598,18 @@ export namespace Prisma {
   }
 
   export type UsersWhereUniqueInput = Prisma.AtLeast<{
+    id?: string
     username?: string
     email?: string
     AND?: UsersWhereInput | UsersWhereInput[]
     OR?: UsersWhereInput[]
     NOT?: UsersWhereInput | UsersWhereInput[]
-    id?: StringFilter<"Users"> | string
     passowrd?: StringFilter<"Users"> | string
     bio?: StringFilter<"Users"> | string
     profileImage?: StringNullableFilter<"Users"> | string | null
     createdAt?: DateTimeFilter<"Users"> | Date | string
     updatedAt?: DateTimeFilter<"Users"> | Date | string
-  }, "username" | "email">
+  }, "id" | "username" | "email">
 
   export type UsersOrderByWithAggregationInput = {
     id?: SortOrder

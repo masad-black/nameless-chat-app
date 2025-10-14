@@ -24,14 +24,36 @@ export async function GET(request) {
     if (type === "users") {
       const users = await prisma.users.findMany({
         where: {
-          username: {
-            contains: search,
-            mode: "insensitive",
-          },
+          OR: [
+            {
+              username: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+            {
+              bio: {
+                contains: search,
+                mode: "insensitive",
+              },
+            },
+          ],
+        },
+        select: {
+          id: true,
+          username: true,
+          profileImage: true,
+          bio: true,
         },
         take: 15,
       });
       console.log("users: ", users);
+
+      return Response.json({
+        success: true,
+        staus: 200,
+        data: users,
+      });
     } else if (type === "groups") {
       // searching for groups
     }

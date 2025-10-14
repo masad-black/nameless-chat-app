@@ -10,7 +10,7 @@ datasource db {
 }
 
 model Users{
-  id String @default(uuid()) // this can be index
+  id String @default(uuid()) @unique  // this can be index
   username String @unique
   email String @unique // this could be the index
   passowrd String

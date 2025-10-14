@@ -27,16 +27,34 @@ export default function GroupsList() {
                       <UsersRound className="w-12 h-12 rounded-full border-gray-200 border" />
                     ) : (
                       <img
-                        src={user.profileImage}
-                        alt={user.name}
+                        src={group.bannerImage}
+                        alt={group.name}
                         className="w-12 h-12 rounded-full border-gray-200 border"
                       />
                     )}
                   </div>
                   <div>
-                    <h3 className="font-medium text-gray-900">{group.name}</h3>
-                    <div className="flex items-center gap-2 text-sm text-gray-500">
-                      <span>{group.bio}</span>
+                    <div className="flex items-center space-x-2">
+                      <h3 className="font-medium text-lg text-gray-700">
+                        {group.name}
+                      </h3>
+                      {group.isPublic ? (
+                        <span className="flex items-center justify-center px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded-md">
+                          Public
+                        </span>
+                      ) : (
+                        <span className="flex items-center justify-center px-2 py-0.5 text-xs bg-red-100 text-red-700 rounded-md">
+                          Private
+                        </span>
+                      )}
+                    </div>
+                    <div className="flex items-center gap-2 text-xs text-gray-500">
+                      <span>
+                        {group.bio.length > 200
+                          ? group.bio.slice(0, 200)
+                          : group.bio}
+                        ...
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -44,7 +62,7 @@ export default function GroupsList() {
                   onClick={() => handleStartConversation(user.id)}
                   className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
                 >
-                  Join Them
+                  {group.isPublic ? "Join Them" : "Join Request"}
                 </button>
               </div>
             ))

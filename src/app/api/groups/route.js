@@ -2,7 +2,6 @@ import { PrismaClient } from "../../../../generated/prisma";
 
 const prisma = new PrismaClient();
 
-// getting users
 export async function GET() {
   try {
     const groups = await prisma.conversations.findMany({
