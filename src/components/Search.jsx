@@ -47,7 +47,7 @@ const Search = () => {
           onClick={() => setActiveTab("users")}
           className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
             activeTab === "users"
-              ? "text-blue-500 border-b border-blue-300"
+              ? "text-blue-500 "
               : "text-gray-600 hover:text-gray-900"
           }`}
         >
@@ -57,7 +57,7 @@ const Search = () => {
           onClick={() => setActiveTab("groups")}
           className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
             activeTab === "groups"
-              ? "text-blue-500 border-b border-blue-300"
+              ? "text-blue-500"
               : "text-gray-600 hover:text-gray-900"
           }`}
         >

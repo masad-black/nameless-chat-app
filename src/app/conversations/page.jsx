@@ -3,7 +3,7 @@ import ConversationSidebar from "@/components/ConversationSidebar";
 
 const Conversations = () => {
   return (
-    <div className="flex relative min-w-screen min-h-screen bg-red-400">
+    <div className="flex w-screen h-screen overflow-hidden">
       <ConversationSidebar />
       <ActiveConversation />
     </div>

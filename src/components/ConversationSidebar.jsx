@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Profile from "./Profile";
 import { Search, Phone, Video, MoreHorizontal } from "lucide-react";
 
 const ConversationSidebar = () => {
@@ -54,10 +55,37 @@ const ConversationSidebar = () => {
       isOnline: false,
       unread: false,
     },
+    {
+      id: 8,
+      name: "Sophie Martin",
+      message: "Perfect! Talk soon 👍",
+      time: "Yesterday",
+      avatar: "/api/placeholder/40/40",
+      isOnline: false,
+      unread: false,
+    },
+    {
+      id: 6,
+      name: "Sophie Martin",
+      message: "Perfect! Talk soon 👍",
+      time: "Yesterday",
+      avatar: "/api/placeholder/40/40",
+      isOnline: false,
+      unread: false,
+    },
+    {
+      id: 7,
+      name: "Sophie Martin",
+      message: "Perfect! Talk soon 👍",
+      time: "Yesterday",
+      avatar: "/api/placeholder/40/40",
+      isOnline: false,
+      unread: false,
+    },
   ];
 
   return (
-    <div className="w-96 bg-white border-r border-gray-200 flex flex-col">
+    <div className="relative w-md bg-white  border-gray-200 flex flex-col">
       {/* Search Bar */}
       <div className="p-4 border-b border-gray-100">
         <div className="relative">
@@ -71,7 +99,6 @@ const ConversationSidebar = () => {
           />
         </div>
       </div>
-
       {/* Conversations List */}
       <div className="flex-1 overflow-y-auto">
         {conversations.map((conversation) => (
