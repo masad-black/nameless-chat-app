@@ -5,12 +5,10 @@ const prisma = new PrismaClient();
 export async function GET() {
   try {
     const users = await prisma.users.findMany({
-      take: 15,
       select: {
         id: true,
         username: true,
         profileImage: true,
-        bio: true,
       },
     });
 

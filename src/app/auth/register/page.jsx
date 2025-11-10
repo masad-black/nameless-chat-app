@@ -14,7 +14,7 @@ import {
   Eye,
   EyeOff,
 } from "lucide-react";
-import { registerNewUser } from "@/app/actions/auth/auth.js";
+import { registerNewUser } from "@/app/actions/auth/auth-action.js";
 
 const RegisterForm = () => {
   const [showPassword, setShowPassword] = useState(false);

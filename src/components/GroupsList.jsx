@@ -1,11 +1,10 @@
-import Loader from "./SkeltenLoader";
-import { useFetch } from "@/hooks/useFetch.js";
-import { getGroups } from "@/utils/apis/groups.js";
-
 import { UsersRound } from "lucide-react";
 
+import Loader from "./SkeltenLoader";
+import { useGroupContext } from "@/context";
+
 export default function GroupsList() {
-  const { isLoading, error, data: groups } = useFetch(getGroups);
+  const { isLoading, groupsList } = useGroupContext();
 
   return (
     <div>
@@ -13,8 +12,8 @@ export default function GroupsList() {
         <Loader />
       ) : (
         <>
-          {groups?.length > 0 ? (
-            groups?.map((group) => (
+          {groupsList?.length > 0 ? (
+            groupsList?.map((group) => (
               <div
                 key={group.id}
                 className="px-4 py-3 hover:bg-gray-50 transition-colors flex items-center justify-between border-gray-200 border rounded-lg my-1"

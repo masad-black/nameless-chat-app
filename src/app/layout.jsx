@@ -1,6 +1,7 @@
 "use client";
 
 import { SessionProvider } from "next-auth/react";
+import AllContextProvider from "@/context";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 
@@ -23,7 +24,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body>
-        <SessionProvider>{children}</SessionProvider>
+        <SessionProvider>
+          <AllContextProvider>{children}</AllContextProvider>
+        </SessionProvider>
       </body>
     </html>
   );

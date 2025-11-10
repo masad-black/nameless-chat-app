@@ -1,20 +1,35 @@
-import Loader from "./SkeltenLoader";
-import { useFetch } from "@/hooks/useFetch.js";
-import { getUsers } from "@/utils/apis/users.js";
-
-import { User } from "lucide-react";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
+import { User } from "lucide-react";
+
+import SkeltenLoader from "./SkeltenLoader";
+import Loader from "./Loader";
+import { useConversationContext, useUserContext } from "@/context";
 
 export default function UsersList({ searchedUserList }) {
+  const router = useRouter();
   const { data: session, status } = useSession();
-  const { isLoading, error, data: users } = useFetch(getUsers);
+  const [selectedConversation, setSelectedConversation] = useState(null);
+  const { createConversation, isLoading: loader } = useConversationContext();
+  const { isLoading, usersList } = useUserContext();
 
-  const allUsers = [...searchedUserList, ...(users || [])];
+  const allUsers = [...searchedUserList, ...(usersList || [])];
+
+  const handleStartConversation = async (memberId) => {
+    setSelectedConversation(memberId);
+
+    // 1: make the api call to add this conversation into DB
+    await createConversation("direct", session.user.id, memberId);
+
+    // 2: redirect to conversations page
+    router.push("/conversations");
+  };
 
   return (
     <div>
       {isLoading ? (
-        <Loader />
+        <SkeltenLoader />
       ) : (
         <>
           {allUsers?.length > 0 ? (
@@ -46,7 +61,9 @@ export default function UsersList({ searchedUserList }) {
                     onClick={() => handleStartConversation(user.id)}
                     className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
                   >
-                    Start Conversation
+                    {selectedConversation === user.id
+                      ? loader && <Loader />
+                      : "Start Conversation"}
                   </button>
                 </div>
               );

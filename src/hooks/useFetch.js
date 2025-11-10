@@ -16,7 +16,7 @@ export function useFetch(apiFn) {
           return;
         }
 
-        console.log("api respnse: ", res);
+        // console.log("api respnse: ", res);
 
         setData(res.data || []);
       } catch (error) {

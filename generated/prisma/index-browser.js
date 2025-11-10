@@ -124,7 +124,7 @@ exports.Prisma.UsersScalarFieldEnum = {
   id: 'id',
   username: 'username',
   email: 'email',
-  passowrd: 'passowrd',
+  password: 'password',
   bio: 'bio',
   profileImage: 'profileImage',
   createdAt: 'createdAt',
@@ -145,27 +145,29 @@ exports.Prisma.ConversationsScalarFieldEnum = {
 
 exports.Prisma.ConversationMembersScalarFieldEnum = {
   id: 'id',
-  conversationId: 'conversationId',
-  userId: 'userId',
-  joinedAt: 'joinedAt',
   role: 'role',
+  joinedAt: 'joinedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  conversationId: 'conversationId',
+  userId: 'userId'
 };
 
 exports.Prisma.MessagesScalarFieldEnum = {
   id: 'id',
-  conversationId: 'conversationId',
-  senderId: 'senderId',
   type: 'type',
   content: 'content',
   imageUrl: 'imageUrl',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  conversationId: 'conversationId',
+  senderId: 'senderId'
 };
 
 exports.Prisma.GroupRequestsScalarFieldEnum = {
   id: 'id',
+  status: 'status',
+  createdAt: 'createdAt',
   conversationId: 'conversationId',
   userId: 'userId'
 };
@@ -197,6 +199,12 @@ exports.ConversationRoles = exports.$Enums.ConversationRoles = {
 exports.MessageTypes = exports.$Enums.MessageTypes = {
   text: 'text',
   image: 'image'
+};
+
+exports.RequestStatus = exports.$Enums.RequestStatus = {
+  pending: 'pending',
+  accepted: 'accepted',
+  rejected: 'rejected'
 };
 
 exports.Prisma.ModelName = {

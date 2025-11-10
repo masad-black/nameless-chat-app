@@ -1,16 +1,21 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import UsersList from "./UsersList";
-import GroupsList from "./GroupsList";
-import { searchNewUsersOrGroups } from "@/utils/apis/search.js";
 import { Search as SearchIcon } from "lucide-react";
 
+import UsersList from "./UsersList";
+import GroupsList from "./GroupsList";
+import NewGroupForm from "./NewGroupForm";
+import { searchNewUsersOrGroups } from "@/utils/apis/search.js";
+import SearchTabs from "./SearchTabs";
+
 const Search = () => {
-  const [activeTab, setActiveTab] = useState("groups");
+  const [currActiveTabs, setCurrectActiveTabs] = useState("users");
   const [searchQuery, setSearchQuery] = useState("");
+  const [showGroupForm, setGroupForm] = useState(false);
   const [searchedUsersList, setSearchedList] = useState([]);
 
+  // todo: also make the search context
   useEffect(() => {
     if (!searchQuery) return;
 
@@ -24,55 +29,44 @@ const Search = () => {
   }, [searchQuery]);
 
   return (
-    <div className="w-scree h-screen bg-white flex flex-col">
+    <div className="relative w-scree h-screen bg-white flex flex-col">
       {/* Search Bar */}
-      <div className="px-4 py-3 ">
-        <div className="relative">
+      <div className="flex items-center space-x-1 px-4 py-3">
+        <div className="flex-1 relative">
           <SearchIcon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-5 h-5" />
           <input
             type="text"
             placeholder={`Search by ${
-              activeTab === "users" ? "username" : "group title"
+              currActiveTabs === "users" ? "username" : "group title"
             }...`}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg outline-0 text-gray-600"
           />
         </div>
+        <button
+          className="px-4 py-2 bg-green-600 text-white text-sm font-medium rounded-lg hover:bg-green-500 transition-colors hover:cursor-pointer"
+          onClick={() => setGroupForm(!showGroupForm)}
+        >
+          Create Group
+        </button>
       </div>
 
       {/* Tabs */}
-      <div className="flex">
-        <button
-          onClick={() => setActiveTab("users")}
-          className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
-            activeTab === "users"
-              ? "text-blue-500 "
-              : "text-gray-600 hover:text-gray-900"
-          }`}
-        >
-          Users
-        </button>
-        <button
-          onClick={() => setActiveTab("groups")}
-          className={`flex-1 px-4 py-3 text-sm font-medium transition-colors ${
-            activeTab === "groups"
-              ? "text-blue-500"
-              : "text-gray-600 hover:text-gray-900"
-          }`}
-        >
-          Groups
-        </button>
-      </div>
+      <SearchTabs
+        currActiveTabs={currActiveTabs}
+        setCurrectActiveTabs={setCurrectActiveTabs}
+      />
 
       {/* Content */}
       <div className="flex-1 px-2 ">
-        {activeTab === "users" && (
+        {currActiveTabs === "users" && (
           <UsersList searchedUserList={searchedUsersList} />
         )}
-
-        {activeTab === "groups" && <GroupsList />}
+        {currActiveTabs === "groups" && <GroupsList />}
       </div>
+
+      {showGroupForm && <NewGroupForm setGroupForm={setGroupForm} />}
     </div>
   );
 };

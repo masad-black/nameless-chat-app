@@ -1,4 +1,5 @@
 import { PrismaClient } from "../../../../../generated/prisma";
+
 import uploadImageToCloude from "@/libs/cloudinary.js";
 
 const prisma = new PrismaClient();

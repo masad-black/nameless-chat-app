@@ -96,7 +96,7 @@ exports.Prisma.UsersScalarFieldEnum = {
   id: 'id',
   username: 'username',
   email: 'email',
-  passowrd: 'passowrd',
+  password: 'password',
   bio: 'bio',
   profileImage: 'profileImage',
   createdAt: 'createdAt',
@@ -117,27 +117,29 @@ exports.Prisma.ConversationsScalarFieldEnum = {
 
 exports.Prisma.ConversationMembersScalarFieldEnum = {
   id: 'id',
-  conversationId: 'conversationId',
-  userId: 'userId',
-  joinedAt: 'joinedAt',
   role: 'role',
+  joinedAt: 'joinedAt',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  conversationId: 'conversationId',
+  userId: 'userId'
 };
 
 exports.Prisma.MessagesScalarFieldEnum = {
   id: 'id',
-  conversationId: 'conversationId',
-  senderId: 'senderId',
   type: 'type',
   content: 'content',
   imageUrl: 'imageUrl',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  conversationId: 'conversationId',
+  senderId: 'senderId'
 };
 
 exports.Prisma.GroupRequestsScalarFieldEnum = {
   id: 'id',
+  status: 'status',
+  createdAt: 'createdAt',
   conversationId: 'conversationId',
   userId: 'userId'
 };
@@ -169,6 +171,12 @@ exports.ConversationRoles = exports.$Enums.ConversationRoles = {
 exports.MessageTypes = exports.$Enums.MessageTypes = {
   text: 'text',
   image: 'image'
+};
+
+exports.RequestStatus = exports.$Enums.RequestStatus = {
+  pending: 'pending',
+  accepted: 'accepted',
+  rejected: 'rejected'
 };
 
 exports.Prisma.ModelName = {
@@ -217,7 +225,6 @@ const config = {
     "db"
   ],
   "activeProvider": "postgresql",
-  "postinstall": false,
   "inlineDatasources": {
     "db": {
       "url": {
@@ -226,22 +233,15 @@ const config = {
       }
     }
   },
-  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../app/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Users {\n  id           String  @unique @default(uuid()) // this can be index\n  username     String  @unique\n  email        String  @unique // this could be the index\n  passowrd     String\n  bio          String  @default(\"Hey there.\")\n  profileImage String?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now())\n}\n\nmodel Conversations {\n  id          String            @unique @default(uuid()) // this can be index\n  createrId   String\n  type        ConversationTypes\n  name        String?\n  bio         String?\n  bannerImage String?\n  isPublic    Boolean\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now())\n}\n\nenum ConversationTypes {\n  direct\n  group\n}\n\nmodel ConversationMembers {\n  id             String            @unique @default(uuid())\n  conversationId String\n  userId         String\n  joinedAt       DateTime          @default(now())\n  role           ConversationRoles\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now())\n}\n\nenum ConversationRoles {\n  member\n  admin\n}\n\n// this is a write heavy table\nmodel Messages {\n  id             String       @unique @default(uuid())\n  conversationId String\n  senderId       String\n  type           MessageTypes\n  content        String\n  imageUrl       String\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @default(now())\n}\n\nmodel GroupRequests {\n  id             String @unique @default(uuid())\n  conversationId String\n  userId         String\n}\n\nenum MessageTypes {\n  text\n  image\n}\n",
-  "inlineSchemaHash": "6c2cc1b59dc5b463395c86511c29c4d2a188abadd5605c8d2fc8283ac3d4abbe",
-  "copyEngine": true
+  "inlineSchema": "generator client {\n  provider = \"prisma-client-js\"\n  output   = \"../app/generated/prisma\"\n}\n\ndatasource db {\n  provider = \"postgresql\"\n  url      = env(\"DATABASE_URL\")\n}\n\nmodel Users {\n  id           String  @id @default(uuid())\n  username     String  @unique\n  email        String  @unique\n  password     String  @default(\"12345678\")\n  bio          String  @default(\"Hey there.\")\n  profileImage String?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  // Relations\n  conversations       Conversations[]\n  conversationMembers ConversationMembers[]\n  messages            Messages[]\n  groupRequests       GroupRequests[]\n\n  @@index([email])\n  @@index([username])\n}\n\nmodel Conversations {\n  id          String            @id @default(uuid())\n  createrId   String? // Optional for direct chats, required for groups\n  type        ConversationTypes\n  name        String? // Required for groups, null for direct\n  bio         String? // Required for groups, null for direct\n  bannerImage String? // Required for groups, null for direct\n  isPublic    Boolean           @default(false)\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  // Relations\n  user          Users?                @relation(fields: [createrId], references: [id], onDelete: SetNull)\n  members       ConversationMembers[]\n  messages      Messages[]\n  groupRequests GroupRequests[]\n\n  @@index([createrId])\n  @@index([type])\n  @@index([updatedAt]) // For sorting conversations by recent activity\n}\n\nenum ConversationTypes {\n  direct\n  group\n}\n\nmodel ConversationMembers {\n  id       String            @id @default(uuid())\n  role     ConversationRoles @default(member)\n  joinedAt DateTime          @default(now())\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  // Relations\n  conversationId String\n  conversation   Conversations @relation(fields: [conversationId], references: [id], onDelete: Cascade)\n\n  userId String\n  user   Users  @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([conversationId, userId]) // Prevent duplicate memberships\n  @@index([userId])\n  @@index([conversationId])\n}\n\nenum ConversationRoles {\n  member\n  admin\n}\n\nmodel Messages {\n  id       String       @id @default(uuid())\n  type     MessageTypes @default(text)\n  content  String\n  imageUrl String?\n\n  createdAt DateTime @default(now())\n  updatedAt DateTime @updatedAt\n\n  // Relations\n  conversationId String\n  conversation   Conversations @relation(fields: [conversationId], references: [id], onDelete: Cascade)\n\n  senderId String\n  sender   Users  @relation(fields: [senderId], references: [id])\n\n  @@index([conversationId, createdAt]) // Optimized for fetching messages in order\n  @@index([senderId])\n}\n\nenum MessageTypes {\n  text\n  image\n}\n\nmodel GroupRequests {\n  id        String        @id @default(uuid())\n  status    RequestStatus @default(pending)\n  createdAt DateTime      @default(now())\n\n  // Relations\n  conversationId String\n  conversation   Conversations @relation(fields: [conversationId], references: [id], onDelete: Cascade)\n\n  userId String\n  user   Users  @relation(fields: [userId], references: [id], onDelete: Cascade)\n\n  @@unique([conversationId, userId]) // Prevent duplicate requests\n  @@index([userId])\n  @@index([conversationId])\n  @@index([status]) // For filtering pending requests\n}\n\nenum RequestStatus {\n  pending\n  accepted\n  rejected\n}\n",
+  "inlineSchemaHash": "5c56160702105e0c3f5d12a759c1ec17325fbd361acf8a5dfc575fef9b846a6a",
+  "copyEngine": false
 }
 config.dirname = '/'
 
-config.runtimeDataModel = JSON.parse("{\"models\":{\"Users\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"passowrd\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bio\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"profileImage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Conversations\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createrId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"ConversationTypes\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bio\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bannerImage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isPublic\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"ConversationMembers\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"conversationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"joinedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"ConversationRoles\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"Messages\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"conversationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"senderId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"MessageTypes\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"imageUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"}],\"dbName\":null},\"GroupRequests\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"conversationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
+config.runtimeDataModel = JSON.parse("{\"models\":{\"Users\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"username\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"email\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"password\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bio\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"profileImage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"conversations\",\"kind\":\"object\",\"type\":\"Conversations\",\"relationName\":\"ConversationsToUsers\"},{\"name\":\"conversationMembers\",\"kind\":\"object\",\"type\":\"ConversationMembers\",\"relationName\":\"ConversationMembersToUsers\"},{\"name\":\"messages\",\"kind\":\"object\",\"type\":\"Messages\",\"relationName\":\"MessagesToUsers\"},{\"name\":\"groupRequests\",\"kind\":\"object\",\"type\":\"GroupRequests\",\"relationName\":\"GroupRequestsToUsers\"}],\"dbName\":null},\"Conversations\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createrId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"ConversationTypes\"},{\"name\":\"name\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bio\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"bannerImage\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"isPublic\",\"kind\":\"scalar\",\"type\":\"Boolean\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"Users\",\"relationName\":\"ConversationsToUsers\"},{\"name\":\"members\",\"kind\":\"object\",\"type\":\"ConversationMembers\",\"relationName\":\"ConversationMembersToConversations\"},{\"name\":\"messages\",\"kind\":\"object\",\"type\":\"Messages\",\"relationName\":\"ConversationsToMessages\"},{\"name\":\"groupRequests\",\"kind\":\"object\",\"type\":\"GroupRequests\",\"relationName\":\"ConversationsToGroupRequests\"}],\"dbName\":null},\"ConversationMembers\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"role\",\"kind\":\"enum\",\"type\":\"ConversationRoles\"},{\"name\":\"joinedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"conversationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"conversation\",\"kind\":\"object\",\"type\":\"Conversations\",\"relationName\":\"ConversationMembersToConversations\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"Users\",\"relationName\":\"ConversationMembersToUsers\"}],\"dbName\":null},\"Messages\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"type\",\"kind\":\"enum\",\"type\":\"MessageTypes\"},{\"name\":\"content\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"imageUrl\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"updatedAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"conversationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"conversation\",\"kind\":\"object\",\"type\":\"Conversations\",\"relationName\":\"ConversationsToMessages\"},{\"name\":\"senderId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"sender\",\"kind\":\"object\",\"type\":\"Users\",\"relationName\":\"MessagesToUsers\"}],\"dbName\":null},\"GroupRequests\":{\"fields\":[{\"name\":\"id\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"status\",\"kind\":\"enum\",\"type\":\"RequestStatus\"},{\"name\":\"createdAt\",\"kind\":\"scalar\",\"type\":\"DateTime\"},{\"name\":\"conversationId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"conversation\",\"kind\":\"object\",\"type\":\"Conversations\",\"relationName\":\"ConversationsToGroupRequests\"},{\"name\":\"userId\",\"kind\":\"scalar\",\"type\":\"String\"},{\"name\":\"user\",\"kind\":\"object\",\"type\":\"Users\",\"relationName\":\"GroupRequestsToUsers\"}],\"dbName\":null}},\"enums\":{},\"types\":{}}")
 defineDmmfProperty(exports.Prisma, config.runtimeDataModel)
-config.engineWasm = {
-  getRuntime: async () => require('./query_engine_bg.js'),
-  getQueryEngineWasmModule: async () => {
-    const loader = (await import('#wasm-engine-loader')).default
-    const engine = (await loader).default
-    return engine
-  }
-}
+config.engineWasm = undefined
 config.compilerWasm = undefined
 
 config.injectableEdgeEnv = () => ({

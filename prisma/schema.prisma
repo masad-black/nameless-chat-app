@@ -1,4 +1,3 @@
-
 generator client {
   provider = "prisma-client-js"
   output   = "../app/generated/prisma"
@@ -9,29 +8,48 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Users{
-  id String @default(uuid()) @unique  // this can be index
-  username String @unique
-  email String @unique // this could be the index
-  passowrd String
-  bio String @default("Hey there.")
+model Users {
+  id           String   @id @default(uuid())
+  username     String   @unique
+  email        String   @unique
+  password     String @default("12345678")
+  bio          String   @default("Hey there.")
   profileImage String?
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  conversations       Conversations[]
+  conversationMembers ConversationMembers[]
+  messages            Messages[]
+  groupRequests       GroupRequests[]
+
+  @@index([email])
+  @@index([username])
 }
 
-model Conversations{
-  id String @default(uuid()) @unique // this can be index
-  createrId String
-  type ConversationTypes
-  name String?
-  bio String?
-  bannerImage String?
-  isPublic Boolean 
+model Conversations {
+  id          String  @id @default(uuid())
+  createrId   String?  // Optional for direct chats, required for groups
+  type        ConversationTypes
+  name        String?  // Required for groups, null for direct
+  bio         String?  // Required for groups, null for direct
+  bannerImage String?  // Required for groups, null for direct
+  isPublic    Boolean           @default(false)
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user          Users?                @relation(fields: [createrId], references: [id], onDelete: SetNull)
+  members       ConversationMembers[]
+  messages      Messages[]
+  groupRequests GroupRequests[]
+
+  @@index([createrId])
+  @@index([type])
+  @@index([updatedAt]) // For sorting conversations by recent activity
 }
 
 enum ConversationTypes {
@@ -39,15 +57,24 @@ enum ConversationTypes {
   group
 }
 
-model ConversationMembers{
-  id String @default(uuid()) @unique
-  conversationId String
-  userId String
-  joinedAt DateTime @default(now())
-  role ConversationRoles
+model ConversationMembers {
+  id       String            @id @default(uuid())
+  role     ConversationRoles @default(member)
+  joinedAt DateTime          @default(now())
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  conversationId String
+  conversation   Conversations @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   Users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId]) // Prevent duplicate memberships
+  @@index([userId])
+  @@index([conversationId])
 }
 
 enum ConversationRoles {
@@ -55,23 +82,24 @@ enum ConversationRoles {
   admin
 }
 
-// this is a write heavy table
-model Messages{
-  id String @default(uuid()) @unique
-  conversationId String
-  senderId String
-  type MessageTypes
-  content String
-  imageUrl String
+model Messages {
+  id       String       @id @default(uuid())
+  type     MessageTypes @default(text)
+  content  String
+  imageUrl String?
 
   createdAt DateTime @default(now())
-  updatedAt DateTime @default(now())
-}
+  updatedAt DateTime @updatedAt
 
-model GroupRequests{
-  id String @default(uuid()) @unique
+  // Relations
   conversationId String
-  userId String
+  conversation   Conversations @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  senderId String
+  sender   Users  @relation(fields: [senderId], references: [id])
+
+  @@index([conversationId, createdAt]) // Optimized for fetching messages in order
+  @@index([senderId])
 }
 
 enum MessageTypes {
@@ -79,3 +107,27 @@ enum MessageTypes {
   image
 }
 
+
+model GroupRequests {
+  id        String   @id @default(uuid())
+  status    RequestStatus   @default(pending) 
+  createdAt DateTime @default(now())
+
+  // Relations
+  conversationId String
+  conversation   Conversations @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+
+  userId String
+  user   Users  @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([conversationId, userId]) // Prevent duplicate requests
+  @@index([userId])
+  @@index([conversationId])
+  @@index([status]) // For filtering pending requests
+}
+
+enum RequestStatus {
+  pending
+  accepted
+  rejected
+}

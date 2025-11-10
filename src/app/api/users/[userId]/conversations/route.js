@@ -7,39 +7,60 @@ export async function GET(request, { params }) {
   try {
     const { userId } = await params;
 
-    // getting all the user created conversations (direct or group)
     const conversations = await prisma.conversations.findMany({
+      // 1: get the "direct"/"groups" user conversations conversation
       where: {
-        createrId: userId,
+        OR: [
+          // user created conversations
+          { createrId: userId },
+          // conversations in which user is memeber direct/group
+          {
+            members: {
+              some: {
+                userId,
+              },
+            },
+          },
+        ],
       },
-    });
-
-    // checking if the uses is member of any gorup conversation
-    const conversationsMember = await prisma.conversationMembers.findMany({
-      where: {
-        userId: userId,
-      },
-    });
-
-    // then also getting that conversations, in which the user id the member
-    let relatedConversations;
-    for (let member of conversationsMember) {
-      relatedConversations = await prisma.conversations.findMany({
-        where: {
-          createrId: member.userId,
+      select: {
+        // selecting conversations data
+        id: true,
+        type: true,
+        name: true,
+        bannerImage: true,
+        bio: true,
+        isPublic: true,
+        createdAt: true,
+        // selecting members data
+        members: {
+          where: {
+            userId: {
+              not: userId,
+            },
+          },
+          select: {
+            id: true,
+            role: true,
+            // selecting users data
+            user: {
+              select: {
+                id: true,
+                username: true,
+                bio: true,
+                profileImage: true,
+              },
+            },
+          },
         },
-      });
-    }
+      },
+    });
 
-    conversations.push(relatedConversations);
-    // console.log("conversations: ", conversations);
-
+    // console.log("direct conversation: ", conversations);
     return Response.json({
       success: true,
-      status: 200,
-      data: {
-        conversations,
-      },
+      staus: 200,
+      data: conversations,
     });
   } catch (error) {
     console.log("Error in getting user conversations: ", error);

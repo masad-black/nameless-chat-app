@@ -10,7 +10,6 @@ export default function UserListSkeleton({ count = 15 }) {
             <div className="w-10 h-10 bg-gray-200 rounded-full"></div>
             <div className="h-4 w-32 bg-gray-200 rounded"></div>
           </div>
-          <div className="h-9 w-36 bg-gray-200 rounded-lg"></div>
         </div>
       ))}
     </div>

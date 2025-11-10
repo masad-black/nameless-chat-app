@@ -48,7 +48,7 @@ const handler = NextAuth({
 
           const isPasswordCorrect = await bcrypt.compare(
             credentails.password,
-            user.passowrd
+            user.password
           );
 
           // password not correct

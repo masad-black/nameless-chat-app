@@ -1,91 +1,25 @@
 "use client";
 
-import { useState } from "react";
-import Profile from "./Profile";
-import { Search, Phone, Video, MoreHorizontal } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Search, Phone, Video, MoreHorizontal, UsersRound } from "lucide-react";
+
+import UserListSkeleton from "./SkeltenLoader";
+import { useConversationContext } from "@/context/conversation-context";
 
 const ConversationSidebar = () => {
-  const [selectedConversation, setSelectedConversation] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const {
+    userConversations,
+    isLoading,
+    selectedConversation,
+    updateSelectedConversation,
+    updateConversationHeaderDetails,
+  } = useConversationContext();
 
-  const conversations = [
-    {
-      id: 1,
-      name: "Emma Wilson",
-      message: "Hey! How's your day going?",
-      time: "2:30 PM",
-      avatar: "/api/placeholder/40/40",
-      isOnline: false,
-      unread: false,
-    },
-    {
-      id: 2,
-      name: "Alex Johnson",
-      message: "Thanks for the help earlier!",
-      time: "1:45 PM",
-      avatar: "/api/placeholder/40/40",
-      isOnline: false,
-      unread: false,
-    },
-    {
-      id: 3,
-      name: "Design Team",
-      message: "Mike: Let's review the mockups",
-      time: "12:20 PM",
-      avatar: "/api/placeholder/40/40",
-      isOnline: false,
-      unread: true,
-      isGroup: true,
-    },
-    {
-      id: 4,
-      name: "David Chen",
-      message: "See you at the meeting!",
-      time: "11:30 AM",
-      avatar: "/api/placeholder/40/40",
-      isOnline: false,
-      unread: false,
-    },
-    {
-      id: 5,
-      name: "Sophie Martin",
-      message: "Perfect! Talk soon 👍",
-      time: "Yesterday",
-      avatar: "/api/placeholder/40/40",
-      isOnline: false,
-      unread: false,
-    },
-    {
-      id: 8,
-      name: "Sophie Martin",
-      message: "Perfect! Talk soon 👍",
-      time: "Yesterday",
-      avatar: "/api/placeholder/40/40",
-      isOnline: false,
-      unread: false,
-    },
-    {
-      id: 6,
-      name: "Sophie Martin",
-      message: "Perfect! Talk soon 👍",
-      time: "Yesterday",
-      avatar: "/api/placeholder/40/40",
-      isOnline: false,
-      unread: false,
-    },
-    {
-      id: 7,
-      name: "Sophie Martin",
-      message: "Perfect! Talk soon 👍",
-      time: "Yesterday",
-      avatar: "/api/placeholder/40/40",
-      isOnline: false,
-      unread: false,
-    },
-  ];
+  // console.log("user conversations: ", userConversations);
 
   return (
-    <div className="relative w-md bg-white  border-gray-200 flex flex-col">
+    <div className="relative w-md bg-white flex flex-col">
       {/* Search Bar */}
       <div className="p-4 border-b border-gray-100">
         <div className="relative">
@@ -101,75 +35,89 @@ const ConversationSidebar = () => {
       </div>
       {/* Conversations List */}
       <div className="flex-1 overflow-y-auto">
-        {conversations.map((conversation) => (
-          <div
-            key={conversation.id}
-            onClick={() => setSelectedConversation(conversation.id)}
-            className={`flex items-center p-4 hover:bg-gray-50 cursor-pointer transition-colors ${
-              selectedConversation === conversation.id
-                ? "bg-blue-50 border-r-2 border-blue-500"
-                : ""
-            }`}
-          >
-            {/* Avatar with Online Status */}
-            <div className="relative mr-3">
-              <div className="w-10 h-10 rounded-full bg-gradient-to-br from-blue-400 to-purple-500 flex items-center justify-center">
-                <span className="text-white font-medium text-sm">
-                  {conversation.name
-                    .split(" ")
-                    .map((n) => n[0])
-                    .join("")}
-                </span>
-              </div>
-              {conversation.isOnline && (
-                <div className="absolute -bottom-0.5 -right-0.5 w-3 h-3 bg-green-500 border-2 border-white rounded-full"></div>
-              )}
-              {conversation.isGroup && (
-                <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-orange-500 border-2 border-white rounded-full flex items-center justify-center">
-                  <span className="text-white text-xs font-bold">G</span>
-                </div>
-              )}
-            </div>
+        {isLoading ? (
+          <UserListSkeleton count={8} />
+        ) : (
+          userConversations?.map((conversation) => {
+            const member = conversation?.members?.at(0)?.user;
 
-            {/* Conversation Info */}
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center justify-between mb-1">
-                <h3
-                  className={`text-sm font-medium truncate ${
+            if (conversation?.type === "direct") {
+              // Direct item
+              return (
+                <div
+                  key={conversation.id}
+                  className={`p-1 flex items-center border border-gray-200 rounded-lg my-1 gap-3 flex-1 hover:cursor-pointer
+                  ${
                     selectedConversation === conversation.id
-                      ? "text-gray-900"
-                      : "text-gray-900"
+                      ? "bg-gray-300 text-gray-600"
+                      : "text-gray-400"
                   }`}
+                  onClick={() => {
+                    updateSelectedConversation(conversation.id);
+                    updateConversationHeaderDetails(conversation);
+                  }}
                 >
-                  {conversation.name}
-                </h3>
-                <span
-                  className={`text-xs ${
-                    conversation.unread
-                      ? "text-blue-600 font-medium"
-                      : "text-gray-500"
+                  {member.profileImage === null ? (
+                    <User className="w-12 h-12 rounded-full border-gray-200 border" />
+                  ) : (
+                    <img
+                      src={member.profileImage}
+                      alt={member.name}
+                      className="w-12 h-12 rounded-full border-gray-200 border"
+                    />
+                  )}
+                  <div>
+                    {/* <h3 className="font-medium text-gray-900">{user.name}</h3> */}
+                    <p className="font-medium text-sm">@{member.username}</p>
+                  </div>
+                </div>
+              );
+            } else if (conversation?.type === "group") {
+              // Group/Member item
+              return (
+                <div
+                  key={conversation.id}
+                  className={`p-1  flex items-center justify-between  border border-gray-200 rounded-lg my-1 hover:cursor-pointer ${
+                    selectedConversation === conversation.id
+                      ? "bg-gray-300 text-gray-600"
+                      : "text-gray-400"
                   }`}
+                  onClick={() => {
+                    updateSelectedConversation(conversation.id);
+                    updateConversationHeaderDetails(conversation);
+                  }}
                 >
-                  {conversation.time}
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
-                <p
-                  className={`text-sm truncate ${
-                    conversation.unread
-                      ? "text-gray-900 font-medium"
-                      : "text-gray-500"
-                  }`}
-                >
-                  {conversation.message}
-                </p>
-                {conversation.unread && (
-                  <div className="w-2 h-2 bg-blue-600 rounded-full ml-2 flex-shrink-0"></div>
-                )}
-              </div>
-            </div>
-          </div>
-        ))}
+                  <div className="relative flex items-center gap-3 flex-1">
+                    <div
+                      className={`w-12 h-12 rounded-full flex items-center justify-center  text-xl font-semibold relative`}
+                    >
+                      {conversation.bannerImage === null ? (
+                        <UsersRound className="w-12 h-12 rounded-full border-gray-200 border" />
+                      ) : (
+                        <img
+                          src={conversation.bannerImage}
+                          alt={conversation.name}
+                          className="w-12 h-12 rounded-full border-gray-200 border"
+                        />
+                      )}
+                      <div className="absolute -bottom-0.5 -right-0.5 w-4 h-4 bg-orange-500 border-2 border-white rounded-full flex items-center justify-center">
+                        <span className="text-white text-xs font-bold">G</span>
+                      </div>
+                    </div>
+
+                    <div>
+                      <div className="flex items-center space-x-2">
+                        <h3 className="font-medium text-sm ">
+                          {conversation.name}
+                        </h3>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              );
+            }
+          })
+        )}
       </div>
     </div>
   );
