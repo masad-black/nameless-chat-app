@@ -7,6 +7,8 @@ export async function GET(request, { params }) {
   try {
     const { userId } = await params;
 
+    console.log("user id", userId);
+
     const conversations = await prisma.conversations.findMany({
       // 1: get the "direct"/"groups" user conversations conversation
       where: {
@@ -55,6 +57,8 @@ export async function GET(request, { params }) {
         },
       },
     });
+
+    console.log("all conversations: ", conversations);
 
     // console.log("direct conversation: ", conversations);
     return Response.json({

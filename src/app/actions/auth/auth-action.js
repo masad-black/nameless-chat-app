@@ -35,7 +35,7 @@ async function registerNewUser(formData) {
       data: {
         username: validateFormFields.data.username,
         email: validateFormFields.data.email,
-        passowrd: hashPassword,
+        password: hashPassword,
         bio: "Hey there.",
       },
     });

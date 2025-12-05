@@ -8,9 +8,9 @@ import { GroupProvider, useGroupContext } from "./group-context";
 export default function AllContextProvider({ children }) {
   return (
     <UserProvider>
-      <GroupProvider>
-        <ConversationProvider>{children}</ConversationProvider>
-      </GroupProvider>
+      <ConversationProvider>
+        <GroupProvider>{children}</GroupProvider>
+      </ConversationProvider>
     </UserProvider>
   );
 }

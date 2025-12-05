@@ -1,12 +1,19 @@
 import { createContext, useContext, useState, useEffect } from "react";
+import { useSession } from "next-auth/react";
 
-import { getRandomGroups } from "@/utils/apis";
+import { getRandomGroups, joinGroup } from "@/utils/apis";
+import { useConversationContext } from "./conversation-context.js";
 
 const GroupContext = createContext(null);
 
 export function GroupProvider({ children }) {
+  const { data: session } = useSession();
   const [isLoading, setIsLoading] = useState(false);
   const [groupsList, setGroupsList] = useState([]);
+  const { setUserConversations, updateSelectedConversation } =
+    useConversationContext();
+
+  const user = session?.user;
 
   function updateIsLoading(val) {
     setIsLoading(val);
@@ -19,8 +26,6 @@ export function GroupProvider({ children }) {
 
     try {
       const res = await getRandomGroups();
-
-      console.log("api group res: ", res);
 
       if (!res?.success) {
         setGroupsList([]);
@@ -35,11 +40,26 @@ export function GroupProvider({ children }) {
     }
   };
 
+  const addUserToGroup = async (conversationId) => {
+    updateIsLoading(true);
+
+    try {
+      const res = await joinGroup(user?.id, conversationId);
+
+      setUserConversations((oldConv) => [res?.data?.conversation, ...oldConv]);
+      updateSelectedConversation(res?.data?.conversation?.id);
+    } catch (error) {
+      console.log("Error in adding user to group (group-context) ", error);
+    } finally {
+      updateIsLoading(false);
+    }
+  };
+
   useEffect(() => {
     getGroups();
   }, []);
 
-  const values = { groupsList, isLoading, getGroups };
+  const values = { groupsList, isLoading, getGroups, addUserToGroup };
   return <GroupContext value={values}>{children}</GroupContext>;
 }
 

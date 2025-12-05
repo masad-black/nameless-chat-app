@@ -20,8 +20,6 @@ export function UserProvider({ children }) {
     try {
       const res = await getRandomUsers();
 
-      console.log(res);
-
       if (!res?.success) {
         setUsersList([]);
         return;

@@ -94,7 +94,7 @@ Plan for scaling strategies (e.g., adding more servers, optimizing code).
 Resources:
 https://www.artillery.io/docs/guides/guides/websockets/
 https://k6.io/docs/examples/websockets/
-
+ 
 Phase 5 - Deploy & Operate (Ongoing)
 Goal: Deploy the application to production and ensure smooth operation,
 Steps:

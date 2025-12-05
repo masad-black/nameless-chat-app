@@ -15,7 +15,6 @@ import { PrismaClient } from "../../../../../generated/prisma";
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
-      // name: "",
       //   --- credentails is used to be displayed on client-side. ---
       credentials: {
         email: {

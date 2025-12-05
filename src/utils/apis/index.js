@@ -2,7 +2,7 @@ import {
   createDirectConversation,
   createGroupConversation,
 } from "./conversations.js";
-import { getGroups, getRandomGroups } from "./groups.js";
+import { getGroups, getRandomGroups, joinGroup } from "./groups.js";
 import { searchNewUsersOrGroups } from "./search.js";
 import { getRandomUsers, getUserConversations } from "./users.js";
 
@@ -14,4 +14,5 @@ export {
   searchNewUsersOrGroups,
   getRandomUsers,
   getUserConversations,
+  joinGroup,
 };

@@ -60,6 +60,8 @@ export function ConversationProvider({ children }) {
         return;
       }
 
+      console.log("user conversations: ", res);
+
       setUserConversations([...res.data]);
     } catch (error) {
       console.log(
@@ -93,13 +95,15 @@ export function ConversationProvider({ children }) {
           convMemberId
         );
 
+        console.log("response: ", res);
+
         if (!res.success) {
           console.log("Something wrong in req");
           return;
         }
 
-        updateSelectedConversation(res?.data?.id);
         setUserConversations((oldConv) => [res?.data, ...oldConv]);
+        updateSelectedConversation(res?.data?.id);
       } else if (conversationType.toLowerCase() === "group") {
         // for creating group conversation
         const res = await createGroupConversation(
@@ -113,8 +117,13 @@ export function ConversationProvider({ children }) {
 
         console.log("response: ", res);
 
-        updateSelectedConversation(res?.data?.id);
+        if (!res.success) {
+          console.log("Something wrong in req");
+          return;
+        }
+
         setUserConversations((oldConv) => [res?.data, ...oldConv]);
+        updateSelectedConversation(res?.data?.id);
       }
     } catch (error) {
       console.log(
@@ -133,7 +142,7 @@ export function ConversationProvider({ children }) {
     if (userConversations.length > 0) return;
 
     getConversations();
-  }, [user, userConversations, createConversation]);
+  }, [user]);
 
   const value = {
     isLoading,
@@ -145,6 +154,7 @@ export function ConversationProvider({ children }) {
     addNewUserConversation,
     getConversations,
     createConversation,
+    setUserConversations,
   };
 
   return <ConversationContext value={value}>{children}</ConversationContext>;

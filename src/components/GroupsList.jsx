@@ -1,10 +1,20 @@
+"use client";
+
+import { useRouter } from "next/navigation";
 import { UsersRound } from "lucide-react";
 
 import Loader from "./SkeltenLoader";
 import { useGroupContext } from "@/context";
 
 export default function GroupsList() {
-  const { isLoading, groupsList } = useGroupContext();
+  const router = useRouter();
+  const { isLoading, groupsList, addUserToGroup } = useGroupContext();
+
+  const handleJoinGroup = async (conversationId) => {
+    await addUserToGroup(conversationId);
+
+    router.push("/conversations");
+  };
 
   return (
     <div>
@@ -58,7 +68,7 @@ export default function GroupsList() {
                   </div>
                 </div>
                 <button
-                  onClick={() => handleStartConversation(user.id)}
+                  onClick={() => handleJoinGroup(group?.id)}
                   className="px-4 py-2 bg-blue-600 text-white text-sm font-medium rounded-lg hover:bg-blue-700 transition-colors"
                 >
                   {group.isPublic ? "Join Them" : "Join Request"}

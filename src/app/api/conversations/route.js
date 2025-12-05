@@ -158,6 +158,7 @@ export async function POST(request) {
           bio: true,
           bannerImage: true,
           isPublic: true,
+          type: true,
         },
       });
 

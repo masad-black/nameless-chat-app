@@ -19,3 +19,16 @@ export async function getRandomGroups() {
     console.log("Error in getting users: ", error);
   }
 }
+
+export async function joinGroup(userId, conversationId) {
+  try {
+    const res = await axios.post(BASE_URL, {
+      userId,
+      conversationId,
+    });
+
+    return res.data;
+  } catch (error) {
+    console.log("Error in getting users: ", error);
+  }
+}
