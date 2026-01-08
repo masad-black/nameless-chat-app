@@ -1,10 +1,12 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { Search, Phone, Video, MoreHorizontal, UsersRound } from "lucide-react";
+import { useState } from "react";
+import { useSession } from "next-auth/react";
+import { Search, UsersRound, User } from "lucide-react";
 
 import UserListSkeleton from "./SkeltenLoader";
 import { useConversationContext } from "@/context/conversation-context";
+import { useSocketContext } from "@/context";
 
 const ConversationSidebar = () => {
   const [searchQuery, setSearchQuery] = useState("");
@@ -14,9 +16,16 @@ const ConversationSidebar = () => {
     selectedConversation,
     updateSelectedConversation,
     updateConversationHeaderDetails,
+    conversationHederDetails,
   } = useConversationContext();
+  const { joinDirectRoom } = useSocketContext();
+  const { data: session, status, update } = useSession();
+  const user = session?.user;
 
-  // console.log("user conversations: ", userConversations);
+  // joinDirectRoom(
+  //                     user?.id,
+  //                     conversationHederDetails?.userDetails?.id
+  //                   );
 
   return (
     <div className="relative w-md bg-white flex flex-col">

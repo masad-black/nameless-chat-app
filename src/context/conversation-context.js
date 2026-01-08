@@ -35,14 +35,14 @@ export function ConversationProvider({ children }) {
 
     if (details.type === "direct") {
       const userDetails = details?.members.at(0).user;
-      setConversationHeaderDetails(userDetails);
+      setConversationHeaderDetails({ userDetails, type: "direct" });
     } else if (details.type === "group") {
       const groupDetails = {
         profileImage: details.bannerImage,
         name: details.name,
         bio: details.bio,
       };
-      setConversationHeaderDetails(groupDetails);
+      setConversationHeaderDetails({ groupDetails, type: "group" });
     }
   };
 

@@ -1,11 +1,24 @@
 "use client";
-
 import { useState } from "react";
 import EmojiPicker from "emoji-picker-react";
 import { Paperclip, SmilePlus, Send } from "lucide-react";
 
+import { useConversationContext, useSocketContext } from "@/context";
+
 const SendMessage = () => {
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
+  const [message, setMessage] = useState("");
+  const { conversationHederDetails, selectedConversation } = useConversationContext();
+  const { sendDirectRoomMessage } = useSocketContext();
+
+  function handleClick() {
+    sendDirectRoomMessage(
+      message,
+      "text",
+      selectedConversation,
+      conversationHederDetails?.userDetails?.id
+    );
+  }
 
   return (
     <div className="flex items-center w-full p-3 space-x-6 bg-white border-t border-gray-300">
@@ -20,6 +33,8 @@ const SendMessage = () => {
           type="text"
           name=""
           id=""
+          value={message}
+          onChange={(e) => setMessage(e.target.value)}
           className="w-full outline-0 border-0 p-0.5"
           placeholder="type a message..."
         />
@@ -32,7 +47,10 @@ const SendMessage = () => {
           className="hover:cursor-pointer"
         />
       </div>
-      <button className="bg-blue-600 flex items-center justify-between rounded-full hover:cursor-pointer">
+      <button
+        onClick={handleClick}
+        className="bg-blue-600 flex items-center justify-between rounded-full hover:cursor-pointer"
+      >
         <Send size={20} className="m-3" color="#fff" />
       </button>
     </div>

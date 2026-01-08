@@ -6,7 +6,7 @@ import Link from "next/link";
 import { MessageCircle, Mail, Lock, Eye, EyeOff } from "lucide-react";
 
 const LoginForm = () => {
-  // const { data: session, status, update } = useSession();
+  const { data: session, status, update } = useSession();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -34,36 +34,36 @@ const LoginForm = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex flex-col justify-center items-center px-4">
+    <div className="flex flex-col items-center justify-center min-h-screen px-2 bg-gray-50">
       <div className="w-full max-w-md">
         {/* Logo and Brand */}
-        <div className="text-center mb-8">
+        <div className="mb-8 text-center">
           <div className="flex items-center justify-center mb-6">
             <div className="relative">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center">
+              <div className="flex items-center justify-center w-16 h-16 bg-blue-600 rounded-full">
                 <MessageCircle size={32} className="text-white" />
                 <MessageCircle
                   size={20}
-                  className="absolute -top-1 -right-1 text-white opacity-80"
+                  className="absolute text-white -top-1 -right-1 opacity-80"
                 />
               </div>
             </div>
           </div>
-          <h1 className="text-3xl font-bold text-gray-800 mb-2">ChatFlow</h1>
+          <h1 className="mb-2 text-3xl font-bold text-gray-800">ChatFlow</h1>
           <p className="text-gray-600">Sign in to your account</p>
         </div>
 
         {/* Login Form */}
-        <form className="bg-white rounded-lg shadow-lg p-8">
+        <form className="p-8 bg-white rounded-lg shadow-lg">
           <div className="space-y-6">
             {/* Email Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
                 Email Address
               </label>
               <div className="relative">
                 <Mail
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2"
                   size={18}
                 />
                 <input
@@ -72,19 +72,19 @@ const LoginForm = () => {
                   value={formData.email}
                   onChange={handleInputChange}
                   placeholder="Enter your email"
-                  className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  className="w-full py-3 pl-10 pr-4 transition-all border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
               </div>
             </div>
 
             {/* Password Field */}
             <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block mb-2 text-sm font-medium text-gray-700">
                 Password
               </label>
               <div className="relative">
                 <Lock
-                  className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"
+                  className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2"
                   size={18}
                 />
                 <input
@@ -93,12 +93,12 @@ const LoginForm = () => {
                   value={formData.password}
                   onChange={handleInputChange}
                   placeholder="Enter your password"
-                  className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none transition-all"
+                  className="w-full py-3 pl-10 pr-12 transition-all border border-gray-300 rounded-lg outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute text-gray-400 transform -translate-y-1/2 right-3 top-1/2 hover:text-gray-600"
                 >
                   {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
                 </button>
@@ -113,7 +113,7 @@ const LoginForm = () => {
                   id="remember"
                   checked={rememberMe}
                   onChange={(e) => setRememberMe(e.target.checked)}
-                  className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
+                  className="w-4 h-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                 />
                 <label htmlFor="remember" className="text-sm text-gray-600">
                   Remember me
@@ -131,7 +131,7 @@ const LoginForm = () => {
             <button
               type="submit"
               onClick={handleSubmit}
-              className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 focus:ring-4 focus:ring-blue-200 transition-all"
+              className="w-full py-3 font-semibold text-white transition-all bg-blue-600 rounded-lg hover:bg-blue-700 focus:ring-4 focus:ring-blue-200"
             >
               Sign In
             </button>
@@ -142,7 +142,7 @@ const LoginForm = () => {
                 <div className="w-full border-t border-gray-300"></div>
               </div>
               <div className="relative flex justify-center text-sm">
-                <span className="px-2 bg-white text-gray-500">
+                <span className="px-2 text-gray-500 bg-white">
                   Or continue with
                 </span>
               </div>
@@ -152,7 +152,7 @@ const LoginForm = () => {
             {/* <div className="grid grid-cols-2 gap-4">
               <button
                 type="button"
-                className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
+                className="flex items-center justify-center px-4 py-2 transition-all border border-gray-300 rounded-lg hover:bg-gray-50"
               >
                 <svg className="w-5 h-5 mr-2" viewBox="0 0 24 24">
                   <path
@@ -179,7 +179,7 @@ const LoginForm = () => {
 
               <button
                 type="button"
-                className="flex items-center justify-center px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50 transition-all"
+                className="flex items-center justify-center px-4 py-2 transition-all border border-gray-300 rounded-lg hover:bg-gray-50"
               >
                 <svg
                   className="w-5 h-5 mr-2"
@@ -197,12 +197,12 @@ const LoginForm = () => {
         </form>
 
         {/* Sign Up Link */}
-        <div className="text-center mt-6">
+        <div className="mt-6 text-center">
           <p className="text-gray-600">
             Don't have an account?{" "}
             <Link
               href="/auth/register"
-              className="text-blue-600 hover:underline font-medium"
+              className="font-medium text-blue-600 hover:underline"
             >
               Create Account
             </Link>
@@ -210,7 +210,7 @@ const LoginForm = () => {
         </div>
 
         {/* Footer */}
-        <div className="text-center mt-8">
+        <div className="mt-8 text-center">
           <p className="text-xs text-gray-500">
             By signing in, you agree to our{" "}
             <button type="button" className="text-blue-600 hover:underline">

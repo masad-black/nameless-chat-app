@@ -1,10 +1,8 @@
-import {
-  createDirectConversation,
-  createGroupConversation,
-} from "./conversations.js";
+import { createDirectConversation, createGroupConversation } from "./conversations.js";
 import { getGroups, getRandomGroups, joinGroup } from "./groups.js";
 import { searchNewUsersOrGroups } from "./search.js";
 import { getRandomUsers, getUserConversations } from "./users.js";
+import { createNewMessage } from "./messages.js";
 
 export {
   createDirectConversation,
@@ -15,4 +13,5 @@ export {
   getRandomUsers,
   getUserConversations,
   joinGroup,
+  createNewMessage,
 };
