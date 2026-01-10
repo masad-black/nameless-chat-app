@@ -21,7 +21,7 @@ export function SocketProvider({ children }) {
     socket.emit(DIRECT_ROOM_EVENT, { userIds, message });
     // and this api call will create this message in the DB
     const response = await createNewMessage(type, message, conversationId, userIds.initiatorId);
-    console.log("Api message response: ", response);
+    // console.log("Api message response: ", response);
   };
 
   useEffect(() => {
@@ -34,6 +34,7 @@ export function SocketProvider({ children }) {
 
     return () => {
       socketConnection.disconnect();
+      // socket.off(DIRECT_ROOM_EVENT, sendDirectRoomMessage);
     };
   }, []);
 

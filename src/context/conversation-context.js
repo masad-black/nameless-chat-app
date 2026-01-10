@@ -5,20 +5,21 @@ import {
   getUserConversations,
   createDirectConversation,
   createGroupConversation,
+  getConversationMessages,
 } from "@/utils/apis";
 
 export const ConversationContext = createContext(null);
 
 export function ConversationProvider({ children }) {
   const { data: session } = useSession();
+  const user = session?.user;
   const [isLoading, setLoading] = useState(false);
   const [conversationHederDetails, setConversationHeaderDetails] = useState({});
   const [userConversations, setUserConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
+  const [selectedConversationsMessages, setSelectedConversationMessages] = useState([]);
 
-  const user = session?.user;
-
-  // console.log("session in context: ", user);
+  // console.log("session in context: ", selectedConversation);
 
   function updateLoading(val) {
     setLoading(val);
@@ -46,8 +47,11 @@ export function ConversationProvider({ children }) {
     }
   };
 
-  // adding new conversation
-  function addNewUserConversation() {}
+  const updateSelectedConversationMessages = (message) => {
+    // console.log("In conversation context: ", selectedConversationsMessages, message);
+
+    setSelectedConversationMessages((oldCon) => [...oldCon, message]);
+  };
 
   // get all user conversations direct, group, and member in group
   const getConversations = async () => {
@@ -64,10 +68,7 @@ export function ConversationProvider({ children }) {
 
       setUserConversations([...res.data]);
     } catch (error) {
-      console.log(
-        "Error in getting conversations (conversation-context): ",
-        error
-      );
+      console.log("Error in getting conversations (conversation-context): ", error);
     } finally {
       updateLoading(false);
     }
@@ -89,11 +90,7 @@ export function ConversationProvider({ children }) {
       updateLoading(true);
       // for creating direct(1 to 1) conversation
       if (conversationType.toLowerCase() === "direct") {
-        const res = await createDirectConversation(
-          conversationType,
-          createrId,
-          convMemberId
-        );
+        const res = await createDirectConversation(conversationType, createrId, convMemberId);
 
         console.log("response: ", res);
 
@@ -126,12 +123,27 @@ export function ConversationProvider({ children }) {
         updateSelectedConversation(res?.data?.id);
       }
     } catch (error) {
+      console.log("Error in creating new conversation (conversation-context): ", error);
+    } finally {
+      updateLoading(false);
+    }
+  };
+
+  const getSelectedConversationMessages = async (id) => {
+    // updateLoading(true);
+    try {
+      const messages = await getConversationMessages(id);
+
+      if (messages.length > 0) {
+        setSelectedConversationMessages(messages);
+      }
+    } catch (error) {
       console.log(
-        "Error in creating new conversation (conversation-context): ",
+        "Error in getting selected conversations messages (conversation-context): ",
         error
       );
     } finally {
-      updateLoading(false);
+      // updateLoading(false);
     }
   };
 
@@ -149,12 +161,14 @@ export function ConversationProvider({ children }) {
     userConversations,
     selectedConversation,
     conversationHederDetails,
+    selectedConversationsMessages,
     updateConversationHeaderDetails,
     updateSelectedConversation,
-    addNewUserConversation,
     getConversations,
     createConversation,
     setUserConversations,
+    getSelectedConversationMessages,
+    updateSelectedConversationMessages,
   };
 
   return <ConversationContext value={value}>{children}</ConversationContext>;

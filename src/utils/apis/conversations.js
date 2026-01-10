@@ -2,11 +2,7 @@ import axios from "axios";
 
 const BASE_URL = "/api/conversations";
 
-export async function createDirectConversation(
-  conversationType,
-  createrId,
-  convMemberId
-) {
+export async function createDirectConversation(conversationType, createrId, convMemberId) {
   try {
     const res = await axios.post(BASE_URL, {
       conversationType,
@@ -44,5 +40,21 @@ export async function createGroupConversation(
     // return res.data;
   } catch (error) {
     console.log("Error in creating new conversation record: ", error);
+  }
+}
+
+export async function getConversationMessages(conversationId) {
+  try {
+    const res = await axios.get(`${BASE_URL}/${conversationId}/messages`);
+
+    if (res.data.success) {
+      return res.data.messages;
+    }
+
+    return null;
+
+    console.log("api response: ", res.data);
+  } catch (error) {
+    console.log("Error in getting messages record: ", error);
   }
 }

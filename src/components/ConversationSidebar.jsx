@@ -17,6 +17,7 @@ const ConversationSidebar = () => {
     updateSelectedConversation,
     updateConversationHeaderDetails,
     conversationHederDetails,
+    getSelectedConversationMessages,
   } = useConversationContext();
   const { joinDirectRoom } = useSocketContext();
   const { data: session, status, update } = useSession();
@@ -64,6 +65,7 @@ const ConversationSidebar = () => {
                   onClick={() => {
                     updateSelectedConversation(conversation.id);
                     updateConversationHeaderDetails(conversation);
+                    getSelectedConversationMessages(conversation.id);
                   }}
                 >
                   {member.profileImage === null ? (
@@ -116,9 +118,7 @@ const ConversationSidebar = () => {
 
                     <div>
                       <div className="flex items-center space-x-2">
-                        <h3 className="font-medium text-sm ">
-                          {conversation.name}
-                        </h3>
+                        <h3 className="font-medium text-sm ">{conversation.name}</h3>
                       </div>
                     </div>
                   </div>

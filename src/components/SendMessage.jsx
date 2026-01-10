@@ -2,13 +2,17 @@
 import { useState } from "react";
 import EmojiPicker from "emoji-picker-react";
 import { Paperclip, SmilePlus, Send } from "lucide-react";
+import { useSession } from "next-auth/react";
 
 import { useConversationContext, useSocketContext } from "@/context";
 
 const SendMessage = () => {
+  const { data: session } = useSession();
+  const user = session?.user;
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const [message, setMessage] = useState("");
-  const { conversationHederDetails, selectedConversation } = useConversationContext();
+  const { conversationHederDetails, selectedConversation, updateSelectedConversationMessages } =
+    useConversationContext();
   const { sendDirectRoomMessage } = useSocketContext();
 
   function handleClick() {
@@ -18,6 +22,17 @@ const SendMessage = () => {
       selectedConversation,
       conversationHederDetails?.userDetails?.id
     );
+
+    const newMessage = {
+      id: Math.round(Math.random() * 10000),
+      content: message,
+      type: "text",
+      imageUrl: null,
+      createdAt: Date.now(),
+      senderId: user?.id,
+    };
+
+    // updateSelectedConversationMessages(newMessage);
   }
 
   return (

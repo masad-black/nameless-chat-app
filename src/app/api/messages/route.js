@@ -24,6 +24,8 @@ export async function POST(request) {
       },
     });
 
+    console.log("new message: ", message);
+
     if (!message) {
       return Response.json({
         success: false,
@@ -45,12 +47,4 @@ export async function POST(request) {
       message: "Internal Server Error",
     });
   }
-}
-
-export async function GET() {
-  return Response.json({
-    success: true,
-    status: 200,
-    message: "message created",
-  });
 }
