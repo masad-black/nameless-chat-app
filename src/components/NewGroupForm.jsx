@@ -1,12 +1,12 @@
-import { useSession } from "next-auth/react";
 import { useState } from "react";
 
 import { useConversationContext } from "@/context/conversation-context";
 import Loader from "./Loader";
 import { useRouter } from "next/navigation";
+import { useUser } from "@/hooks";
 
 export default function NewGroupForm({ setGroupForm }) {
-  const { data: session } = useSession();
+  const { userData } = useUser();
   const router = useRouter();
   const [selectedImageFile, setSelectedImageFile] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
@@ -14,8 +14,6 @@ export default function NewGroupForm({ setGroupForm }) {
   const [isPrivate, setIsPrivate] = useState(true);
   const [groupBio, setGroupBio] = useState("");
   const { isLoading, createConversation } = useConversationContext();
-
-  const user = session?.user;
 
   const handleImageChange = (e) => {
     const file = e.target.files[0];
@@ -28,13 +26,12 @@ export default function NewGroupForm({ setGroupForm }) {
       reader.readAsDataURL(file);
     }
   };
-
   const handleSubmit = async (e) => {
     e.preventDefault();
 
     await createConversation(
       "group",
-      user.id,
+      userData?.id,
       null,
       groupName,
       groupBio,
@@ -50,30 +47,18 @@ export default function NewGroupForm({ setGroupForm }) {
       <div className="max-w-2xl mx-auto bg-white rounded-lg shadow-sm border border-gray-200">
         {/* Header */}
         <div className="border-b border-gray-200 px-6 py-4">
-          <h2 className="text-2xl font-semibold text-gray-800">
-            Create New Group
-          </h2>
+          <h2 className="text-2xl font-semibold text-gray-800">Create New Group</h2>
         </div>
 
         {/* Form */}
-        <form
-          onSubmit={handleSubmit}
-          className="p-6 space-y-6"
-          encType="multipart/form-data"
-        >
+        <form onSubmit={handleSubmit} className="p-6 space-y-6" encType="multipart/form-data">
           {/* Image Upload */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Group Image
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Group Image</label>
             <div className="flex items-center gap-4">
               <div className="w-24 h-24 rounded-full bg-gray-100 border-2 border-gray-300 overflow-hidden flex items-center justify-center">
                 {selectedImage ? (
-                  <img
-                    src={selectedImage}
-                    alt="Group"
-                    className="w-full h-full object-cover"
-                  />
+                  <img src={selectedImage} alt="Group" className="w-full h-full object-cover" />
                 ) : (
                   <svg
                     className="w-10 h-10 text-gray-400"
@@ -104,10 +89,7 @@ export default function NewGroupForm({ setGroupForm }) {
 
           {/* Group Name */}
           <div className="space-y-2">
-            <label
-              htmlFor="groupName"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="groupName" className="block text-sm font-medium text-gray-700">
               Group Name
             </label>
             <input
@@ -123,9 +105,7 @@ export default function NewGroupForm({ setGroupForm }) {
 
           {/* Privacy Toggle */}
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Group Privacy
-            </label>
+            <label className="block text-sm font-medium text-gray-700">Group Privacy</label>
             <div className="flex gap-3">
               <button
                 type="button"
@@ -154,10 +134,7 @@ export default function NewGroupForm({ setGroupForm }) {
 
           {/* Group Bio */}
           <div className="space-y-2">
-            <label
-              htmlFor="groupBio"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="groupBio" className="block text-sm font-medium text-gray-700">
               Group Bio
             </label>
             <textarea

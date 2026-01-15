@@ -1,12 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { useSession, signIn } from "next-auth/react";
+import { signIn } from "next-auth/react";
 import Link from "next/link";
 import { MessageCircle, Mail, Lock, Eye, EyeOff } from "lucide-react";
 
 const LoginForm = () => {
-  const { data: session, status, update } = useSession();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -58,9 +57,7 @@ const LoginForm = () => {
           <div className="space-y-6">
             {/* Email Field */}
             <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700">
-                Email Address
-              </label>
+              <label className="block mb-2 text-sm font-medium text-gray-700">Email Address</label>
               <div className="relative">
                 <Mail
                   className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2"
@@ -79,9 +76,7 @@ const LoginForm = () => {
 
             {/* Password Field */}
             <div>
-              <label className="block mb-2 text-sm font-medium text-gray-700">
-                Password
-              </label>
+              <label className="block mb-2 text-sm font-medium text-gray-700">Password</label>
               <div className="relative">
                 <Lock
                   className="absolute text-gray-400 transform -translate-y-1/2 left-3 top-1/2"
@@ -200,10 +195,7 @@ const LoginForm = () => {
         <div className="mt-6 text-center">
           <p className="text-gray-600">
             Don't have an account?{" "}
-            <Link
-              href="/auth/register"
-              className="font-medium text-blue-600 hover:underline"
-            >
+            <Link href="/auth/register" className="font-medium text-blue-600 hover:underline">
               Create Account
             </Link>
           </p>

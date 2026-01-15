@@ -14,9 +14,12 @@ export async function GET() {
         bio: true,
         bannerImage: true,
         isPublic: true,
+        _count: true,
       },
       take: 15,
     });
+
+    console.log("groups: ", groups);
 
     return Response.json({
       success: true,

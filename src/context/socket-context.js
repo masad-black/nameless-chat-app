@@ -1,6 +1,5 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { io } from "socket.io-client";
-import { useSession } from "next-auth/react";
 
 import { DIRECT_ROOM_EVENT } from "@/utils/constant.js";
 import { createNewMessage } from "@/utils/apis";
@@ -11,8 +10,6 @@ const SocketContext = createContext(null);
 
 export function SocketProvider({ children }) {
   const [socket, setSocket] = useState(null);
-  const { data: session, status, update } = useSession();
-  const user = session?.user;
 
   const sendDirectRoomMessage = async (message, type, conversationId, receiverId) => {
     const userIds = { initiatorId: user?.id, receiverId };

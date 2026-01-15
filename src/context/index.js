@@ -1,7 +1,4 @@
-import {
-  ConversationProvider,
-  useConversationContext,
-} from "./conversation-context";
+import { ConversationProvider, useConversationContext } from "./conversation-context";
 import { UserProvider, useUserContext } from "./user-context";
 import { GroupProvider, useGroupContext } from "./group-context";
 import { useSocketContext, SocketProvider } from "./socket-context";
@@ -11,6 +8,7 @@ export default function AllContextProvider({ children }) {
     <UserProvider>
       <ConversationProvider>
         <GroupProvider>
+          {/* {children} */}
           <SocketProvider>{children}</SocketProvider>
         </GroupProvider>
       </ConversationProvider>
@@ -18,9 +16,4 @@ export default function AllContextProvider({ children }) {
   );
 }
 
-export {
-  useUserContext,
-  useGroupContext,
-  useConversationContext,
-  useSocketContext,
-};
+export { useUserContext, useGroupContext, useConversationContext, useSocketContext };

@@ -7,8 +7,6 @@ export async function middleware(request) {
     secret: process.env.NEXTAUTH_SECRET,
   });
 
-  // console.log("Middleware token: ", token);
-
   // user is not logged in redirect to login page
   if (!token) {
     return NextResponse.redirect(new URL("/auth/register", request.url));

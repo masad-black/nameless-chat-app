@@ -1,19 +1,16 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { useSession } from "next-auth/react";
 
 import { getRandomGroups, joinGroup } from "@/utils/apis";
 import { useConversationContext } from "./conversation-context.js";
+import { useUser } from "@/hooks/useUser.js";
 
 const GroupContext = createContext(null);
 
 export function GroupProvider({ children }) {
-  const { data: session } = useSession();
+  const { userData } = useUser();
   const [isLoading, setIsLoading] = useState(false);
   const [groupsList, setGroupsList] = useState([]);
-  const { setUserConversations, updateSelectedConversation } =
-    useConversationContext();
-
-  const user = session?.user;
+  const { setUserConversations, updateSelectedConversation } = useConversationContext();
 
   function updateIsLoading(val) {
     setIsLoading(val);
@@ -44,7 +41,7 @@ export function GroupProvider({ children }) {
     updateIsLoading(true);
 
     try {
-      const res = await joinGroup(user?.id, conversationId);
+      const res = await joinGroup(userData?.id, conversationId);
 
       setUserConversations((oldConv) => [res?.data?.conversation, ...oldConv]);
       updateSelectedConversation(res?.data?.conversation?.id);

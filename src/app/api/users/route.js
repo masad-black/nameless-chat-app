@@ -9,9 +9,15 @@ export async function GET() {
         id: true,
         username: true,
         profileImage: true,
+        bio: true,
       },
     });
 
+    // return Response.json({
+    //   success: false,
+    //   staus: 500,
+    //   message: "Internal Server Error",
+    // });
     return Response.json({
       success: true,
       staus: 200,

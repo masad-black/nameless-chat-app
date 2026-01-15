@@ -1,4 +1,3 @@
-import { useSession } from "next-auth/react";
 import { createContext, useContext, useEffect, useState } from "react";
 
 import {
@@ -7,12 +6,12 @@ import {
   createGroupConversation,
   getConversationMessages,
 } from "@/utils/apis";
+import { useUser } from "@/hooks";
 
 export const ConversationContext = createContext(null);
 
 export function ConversationProvider({ children }) {
-  const { data: session } = useSession();
-  const user = session?.user;
+  const { userData } = useUser();
   const [isLoading, setLoading] = useState(false);
   const [conversationHederDetails, setConversationHeaderDetails] = useState({});
   const [userConversations, setUserConversations] = useState([]);
@@ -55,16 +54,18 @@ export function ConversationProvider({ children }) {
 
   // get all user conversations direct, group, and member in group
   const getConversations = async () => {
+    console.log("user Id in conversation: ", userData);
+
     updateLoading(true);
     try {
-      const res = await getUserConversations(user?.id);
+      const res = await getUserConversations(userData?.id);
 
       if (!res.success) {
         console.log("Something wrong in req");
         return;
       }
 
-      console.log("user conversations: ", res);
+      console.log("api user conversations: ", res);
 
       setUserConversations([...res.data]);
     } catch (error) {
@@ -148,13 +149,13 @@ export function ConversationProvider({ children }) {
   };
 
   useEffect(() => {
-    if (user === undefined) return;
+    if (userData === undefined) return;
 
     // the data is already fetched
     if (userConversations.length > 0) return;
 
     getConversations();
-  }, [user]);
+  }, [userData]);
 
   const value = {
     isLoading,
