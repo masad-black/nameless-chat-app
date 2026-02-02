@@ -22,9 +22,30 @@ export async function POST(request) {
         senderId,
         conversationId,
       },
+      select: {
+        id: true,
+        content: true,
+        imageUrl: true,
+        createdAt: true,
+        conversationId: true,
+        senderId: true,
+        type: true,
+      },
     });
 
-    console.log("new message: ", message);
+    const members = await prisma.conversationMembers.findMany({
+      where: {
+        conversationId,
+      },
+      select: {
+        userId: true,
+      },
+    });
+
+    console.log(" message members: ", {
+      message,
+      members,
+    });
 
     if (!message) {
       return Response.json({
@@ -37,7 +58,10 @@ export async function POST(request) {
     return Response.json({
       success: true,
       status: 200,
-      message: "Message created",
+      data: {
+        message,
+        members,
+      },
     });
   } catch (error) {
     console.log("Error in creting new message: ", error);

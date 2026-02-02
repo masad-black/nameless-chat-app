@@ -1,14 +1,16 @@
 import StoriesHeader from "./stories/StoriesHeader";
 import ConversationSidebar from "./ConversationSidebar";
 import ActiveConversation from "./ActiveConversation";
+import { useConversationContext } from "@/context";
 
 export default function ConversationTemplate() {
+  const { selectedConversation } = useConversationContext();
   return (
-    <div className=" w-screen h-screen overflow-hidden bg-red-400">
+    <div className=" w-screen h-screen overflow-hidden">
       <StoriesHeader />
-      <div className="flex h-full bg-green-200">
+      <div className="flex h-full ">
         <ConversationSidebar />
-        <ActiveConversation />
+        {selectedConversation && <ActiveConversation />}
       </div>
     </div>
   );

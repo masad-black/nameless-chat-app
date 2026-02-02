@@ -1,27 +1,22 @@
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
-import { UsersIcon, GlobeIcon, LockIcon } from "@/app/assets/icons";
+import { UsersIcon, GlobeIcon, LockIcon, RigthArrowIcon } from "@/app/assets/icons";
+import { useGroupContext } from "@/context";
 
 export default function GroupItem({ group }) {
-  console.log("grups: ", group);
+  const router = useRouter();
+  const { addUserToGroup } = useGroupContext();
 
-  const handleClick = () => {
-    alert(`Clicked on group: ${group.name}`);
+  const handleClick = async () => {
+    // add this user to group
+    await addUserToGroup(group?.id);
+
+    router.push("/conversations");
   };
 
-  // <Image
-  //   src={group.bannerImage}
-  //   alt={group.name}
-  //   className="object-cover w-10 h-10 transition-all rounded-full ring-2 ring-gray-100 group-hover:ring-indigo-100"
-  //   width={100}
-  //   height={100}
-  // />
-
   return (
-    <button
-      onClick={handleClick}
-      className="flex items-center w-full gap-3 p-2 border border-transparent hover:bg-gray-100 hover:cursor-pointer group"
-    >
+    <div className="flex items-center w-full gap-3 p-2 border border-transparent hover:bg-gray-100 hover:cursor-pointer group">
       <div className="relative flex-shrink-0">
         {group.bannerImage ? (
           <img
@@ -65,17 +60,27 @@ export default function GroupItem({ group }) {
       </div>
 
       <div className="transition-opacity opacity-0 group-hover:opacity-100">
-        <div className="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-50">
-          <svg
-            className="w-4 h-4 text-indigo-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        {group?.isPublic ? (
+          <div
+            onClick={handleClick}
+            className="flex items-center justify-center w-8 h-8 rounded-full bg-indigo-50"
           >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </div>
+            <RigthArrowIcon />
+          </div>
+        ) : (
+          <button className="border text-sm font-normal rounded-lg bg-green-700 text-white p-1">
+            Join Request
+          </button>
+        )}
       </div>
-    </button>
+    </div>
   );
 }
+
+// <Image
+//   src={group.bannerImage}
+//   alt={group.name}
+//   className="object-cover w-10 h-10 transition-all rounded-full ring-2 ring-gray-100 group-hover:ring-indigo-100"
+//   width={100}
+//   height={100}
+// />

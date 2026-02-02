@@ -1,97 +1,20 @@
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-
 import SkeltenLoader from "../SkeletonLoader";
-import Loader from "../Loader";
-import { useConversationContext, useUserContext } from "@/context";
-import { useUser } from "@/hooks";
+import { useUserContext } from "@/context";
 import UserItem from "./UserItem";
 import ErrorMessage from "../ErrorMessage";
+import { useUser } from "@/hooks";
 
 export default function UsersList({ searchedUserList }) {
   const { userData } = useUser();
-  const [selectedConversation, setSelectedConversation] = useState(null);
-  const { createConversation, isLoading: loader } = useConversationContext();
-  const { isLoading, usersList } = useUserContext();
-  const router = useRouter();
-
-  const error = true;
+  const { isLoading, usersList, error } = useUserContext();
   // const allUsers = [...searchedUserList, ...(usersList || [])];
   const allUsers = [...(usersList || [])];
-
-  const handleStartConversation = async (memberId) => {
-    setSelectedConversation(memberId);
-
-    // 1: make the api call to add this conversation into DB
-    await createConversation("direct", userData?.id, memberId);
-
-    // 2: redirect to conversations page
-    router.push("/conversations");
-  };
-
-  const users = [
-    {
-      profileImage: "",
-      username: "asad_butt01",
-      bio: "hey i am going to be a software developer!!",
-    },
-    {
-      profileImage: "",
-      username: "asad_butt01",
-      bio: "hey i am going to be a software developer!!",
-    },
-    {
-      profileImage: "",
-      username: "asad_butt01",
-      bio: "hey i am going to be a software developer!!",
-    },
-    {
-      profileImage: "",
-      username: "asad_butt01",
-      bio: "hey i am going to be a software developer!!",
-    },
-    {
-      profileImage: "",
-      username: "asad_butt01",
-      bio: "hey i am going to be a software developer!!",
-    },
-    {
-      profileImage: "",
-      username: "asad_butt01",
-      bio: "hey i am going to be a software developer!!",
-    },
-    {
-      profileImage: "",
-      username: "asad_butt01",
-      bio: "hey i am going to be a software developer!!",
-    },
-    {
-      profileImage: "",
-      username: "asad_butt01",
-      bio: "hey i am going to be a software developer!!",
-    },
-    {
-      profileImage: "",
-      username: "asad_butt01",
-      bio: "hey i am going to be a software developer!!",
-    },
-    {
-      profileImage: "",
-      username: "asad_butt01",
-      bio: "hey i am going to be a software developer!!",
-    },
-    {
-      profileImage: "",
-      username: "asad_butt01",
-      bio: "hey i am going to be a software developer!!",
-    },
-  ];
 
   if (isLoading) {
     return <SkeltenLoader />;
   }
 
-  if (false) {
+  if (error) {
     return (
       <div className="flex justify-center pt-7">
         <ErrorMessage
@@ -103,17 +26,18 @@ export default function UsersList({ searchedUserList }) {
     );
   }
 
-  if (allUsers?.length === 0) {
-    return (
-      <div className="flex justify-center pt-7">
-        <ErrorMessage message={"No users found."} />
-      </div>
-    );
-  }
+  // if (allUsers?.length === 0) {
+  //   return (
+  //     <div className="flex justify-center pt-7">
+  //       <ErrorMessage message={"No users available."} />
+  //     </div>
+  //   );
+  // }
 
   return (
     <ul>
       {allUsers?.map((user) => {
+        if (user.id === userData.id) return;
         return <UserItem key={user?.id} user={user} />;
       })}
     </ul>

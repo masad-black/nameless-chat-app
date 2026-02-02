@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 import Actions from "./Actions";
 import ImageUpload from "./form_items/ImageUpload";
@@ -7,26 +8,42 @@ import FormField from "./form_items/FormField";
 import GroupPrivacySelector from "./form_items/GroupPrivacySelector";
 import AddGroupMembers from "./form_items/AddGroupMembers";
 import { useConversationContext } from "@/context";
+import { CONVERSATION_PAGE_URL } from "@/utils/constant";
 
 export default function Form({ onClick }) {
-  const [uploadedImage, setImage] = useState();
+  const router = useRouter();
+  const [image, setImage] = useState();
+  const [actualFile, setFile] = useState();
   const [groupName, setGroupName] = useState("");
   const [groupBio, setGroupBio] = useState("");
   const [groupPrivacy, setGroupPrivacy] = useState("public");
-  const [groupMemberIds, setGroupMemberIds] = useState([]);
   const { createConversation } = useConversationContext();
 
-  function formHandler(e) {
+  async function formHandler(e) {
     e.preventDefault();
-    console.log("group data: ", groupName, groupBio, groupPrivacy, uploadedImage);
+    const privacy = groupPrivacy === "private" ? false : true;
+    await createConversation("group", null, groupName, groupBio, privacy, actualFile);
+    router.push(CONVERSATION_PAGE_URL);
+  }
+
+  function resetFormFields() {
+    setGroupName("");
+    setGroupBio("");
+    setGroupPrivacy("public");
+    setImage();
+    setFile();
   }
 
   return (
     <div className="w-screen h-screen absolute bg-[#636364]/60 flex items-center justify-center">
-      <form onSubmit={formHandler} className="w-full  max-w-3xl rounded-xl overflow-hidden">
+      <form
+        onSubmit={formHandler}
+        className="w-full  max-w-3xl rounded-xl overflow-hidden"
+        encType="multipart/form-data"
+      >
         <Header onClick={onClick} />
         <main className="bg-white px-12 py-1 space-y-5 pb-5">
-          <ImageUpload image={uploadedImage} setImage={setImage} />
+          <ImageUpload setFile={setFile} image={image} setImage={setImage} />
           <FormField
             type={"text"}
             title={"Group Name "}
@@ -46,9 +63,9 @@ export default function Form({ onClick }) {
             required={true}
           />
           <GroupPrivacySelector groupPrivacy={groupPrivacy} setGroupPrivacy={setGroupPrivacy} />
-          <AddGroupMembers setGroupMemberIds={setGroupMemberIds} />
+          {/* <AddGroupMembers setGroupMemberIds={setGroupMemberIds} /> */}
         </main>
-        <Actions />
+        <Actions resetFormFields={resetFormFields} />
       </form>
     </div>
   );

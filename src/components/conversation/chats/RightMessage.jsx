@@ -2,7 +2,7 @@ export function RightMessage({ message }) {
   const time = new Date(message?.createdAt);
   return (
     <div className="flex justify-end mb-4">
-      <div className="flex flex-col items-end max-w-[370px]">
+      <div className="flex flex-col items-end max-w-[370px]  overflow-hidden">
         {message?.imageUrl && (
           <div className="mb-2">
             <img

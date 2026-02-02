@@ -1,22 +1,21 @@
 import { CameraIcon } from "@/app/assets/icons";
 import { useState } from "react";
 
-export default function ImageUpload({ image, setImage }) {
+export default function ImageUpload({ image, setImage, setFile }) {
   const [errorMessage, setErrorMessage] = useState();
 
   function handleUpload(e) {
     const file = e.target.files[0];
+    setFile(file);
 
     if (!file.type.startsWith("image/")) {
       setErrorMessage("Only images are allowed");
     }
 
     const reader = new FileReader();
-
     reader.onload = () => {
       setImage(reader.result);
     };
-
     reader.readAsDataURL(file);
   }
 

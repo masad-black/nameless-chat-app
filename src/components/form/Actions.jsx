@@ -1,7 +1,7 @@
 import { useConversationContext } from "@/context";
 import Loader from "../Loader";
 
-export default function Actions() {
+export default function Actions({ resetFormFields }) {
   const { isLoading } = useConversationContext();
 
   return (
@@ -14,6 +14,7 @@ export default function Actions() {
         <>
           {/* Cancel Button */}
           <button
+            onClick={resetFormFields}
             type="reset"
             className="
           px-4 py-2

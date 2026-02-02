@@ -5,14 +5,16 @@ import { useSocketContext, SocketProvider } from "./socket-context";
 
 export default function AllContextProvider({ children }) {
   return (
-    <UserProvider>
-      <ConversationProvider>
-        <GroupProvider>
-          {/* {children} */}
-          <SocketProvider>{children}</SocketProvider>
-        </GroupProvider>
-      </ConversationProvider>
-    </UserProvider>
+    <SocketProvider>
+      <UserProvider>
+        <ConversationProvider>
+          <GroupProvider>
+            {/* {children} */}
+            {children}
+          </GroupProvider>
+        </ConversationProvider>
+      </UserProvider>
+    </SocketProvider>
   );
 }
 

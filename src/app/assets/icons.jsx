@@ -16,7 +16,12 @@ import {
   SmilePlus,
   SendHorizontal,
   Paperclip,
+  ChevronRight,
 } from "lucide-react";
+
+export function RigthArrowIcon() {
+  return <ChevronRight color="#000" size={20} />;
+}
 
 export function FileUploadIcon() {
   return <Paperclip color="#9CA3AF" size={18} />;

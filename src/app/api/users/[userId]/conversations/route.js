@@ -31,25 +31,15 @@ export async function GET(request, { params }) {
         type: true,
         name: true,
         bannerImage: true,
-        bio: true,
-        isPublic: true,
-        createdAt: true,
         // selecting members data
         members: {
-          where: {
-            userId: {
-              not: userId,
-            },
-          },
           select: {
-            id: true,
             role: true,
             // selecting users data
             user: {
               select: {
                 id: true,
                 username: true,
-                bio: true,
                 profileImage: true,
               },
             },

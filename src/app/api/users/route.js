@@ -13,11 +13,6 @@ export async function GET() {
       },
     });
 
-    // return Response.json({
-    //   success: false,
-    //   staus: 500,
-    //   message: "Internal Server Error",
-    // });
     return Response.json({
       success: true,
       staus: 200,

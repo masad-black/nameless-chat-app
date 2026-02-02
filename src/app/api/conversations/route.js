@@ -101,20 +101,11 @@ export async function POST(request) {
           createdAt: true,
           // selecting members data
           members: {
-            where: {
-              userId: {
-                not: createrId,
-              },
-            },
             select: {
-              id: true,
-              role: true,
-              // selecting users data
               user: {
                 select: {
-                  id: true,
                   username: true,
-                  bio: true,
+                  id: true,
                   profileImage: true,
                 },
               },
@@ -122,6 +113,27 @@ export async function POST(request) {
           },
         },
       });
+
+      //       members: {
+      //   where: {
+      //     userId: {
+      //       not: createrId,
+      //     },
+      //   },
+      //   select: {
+      //     id: true,
+      //     role: true,
+      //     // selecting users data
+      //     user: {
+      //       select: {
+      //         id: true,
+      //         username: true,
+      //         bio: true,
+      //         profileImage: true,
+      //       },
+      //     },
+      //   },
+      // },
 
       return Response.json({
         success: true,
@@ -161,6 +173,19 @@ export async function POST(request) {
           type: true,
         },
       });
+
+      // 2: also adding this as an admin of the grou
+      const groupAdmin = await prisma.conversationMembers.create({
+        data: {
+          role: "admin",
+          userId: creater.id,
+          conversationId: groupConversation.id,
+        },
+      });
+
+      if (!groupAdmin) {
+        throw new Error("Something went wrong!!!");
+      }
 
       return Response.json({
         success: true,

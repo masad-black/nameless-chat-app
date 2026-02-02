@@ -5,14 +5,15 @@ import { DIRECT_ROOM_EVENT } from "@/utils/constant";
 import { useUser } from "@/hooks";
 import { RightMessage } from "./RightMessage";
 import { LeftMessage } from "./LeftMessage";
+import ErrorMessage from "@/components/ErrorMessage";
+import ChatLoader from "@/components/ChatLoader";
 
 export default function ChatList() {
   const { userData } = useUser();
-  const { selectedConversationsMessages, updateSelectedConversationMessages } =
+  const { selectedConversationsMessages, updateSelectedConversationMessages, messagesLoader } =
     useConversationContext();
-  // const { socket } = useSocketContext();
+  const { socket } = useSocketContext();
   const divRef = useRef();
-  // console.log("messages in chat file: ", selectedConversationsMessages);
 
   function handleSend({ message, senderId }) {
     // console.log("receiving message: ", message, senderId);
@@ -44,15 +45,25 @@ export default function ChatList() {
     }
   }, [selectedConversationsMessages]);
 
+  if (messagesLoader) {
+    return <ChatLoader />;
+  }
+
+  if (selectedConversationsMessages?.length === 0) {
+    return (
+      <div className="flex justify-center">
+        <ErrorMessage message={"Start conversaton by sending a message!!"} />
+      </div>
+    );
+  }
+
   return (
     <div className="p-3">
       <ul ref={divRef} className="w-full">
         {selectedConversationsMessages?.map((chat) => {
           if (chat.senderId === userData?.id) {
             return <RightMessage key={chat?.id} message={chat} />;
-          }
-          // Right side chat
-          else {
+          } else {
             return <LeftMessage key={chat?.id} message={chat} />;
           }
         })}

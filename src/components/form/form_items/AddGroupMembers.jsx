@@ -62,7 +62,7 @@ export default function AddGroupMembers({ setGroupMemberIds }) {
         defaultValue=""
       >
         <option className="" disabled>
-          <p className="text-sm font-normal">Select users...</p>
+          Select users...
         </option>
         {availableUsers
           .filter((user) => !selectedUsers.find((u) => u.id === user.id))

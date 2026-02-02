@@ -1,4 +1,13 @@
-export default function Input({ type, placeholder, value, onChangeHandler, required, className }) {
+export default function Input({
+  type,
+  placeholder,
+  value,
+  onChangeHandler,
+  required,
+  className,
+  disabled,
+  onEnter,
+}) {
   return (
     <input
       required={required}
@@ -6,9 +15,11 @@ export default function Input({ type, placeholder, value, onChangeHandler, requi
       name=""
       id=""
       placeholder={placeholder}
-      className={`${className} outline-0`}
+      className={`${className} outline-0 `}
       value={value}
       onChange={(e) => onChangeHandler(e.target.value)}
+      disabled={disabled}
+      onKeyDown={onEnter}
     />
   );
 }

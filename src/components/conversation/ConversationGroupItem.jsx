@@ -1,35 +1,33 @@
 import { SingleUserIcon } from "@/app/assets/icons";
 import { useConversationContext } from "@/context";
 
-export default function ConversationItem({ user, conversation }) {
-  console.log("user: ", user);
-
+export default function ConversationGroupItem({ group }) {
   const {
     selectedConversation,
     updateSelectedConversation,
     updateConversationHeaderDetails,
     getSelectedConversationMessages,
   } = useConversationContext();
-  const unreadCount = 3;
+  let unreadCount = 0;
 
   function handleClick() {
-    updateSelectedConversation(conversation.id);
-    updateConversationHeaderDetails(conversation);
-    getSelectedConversationMessages(conversation.id);
+    updateSelectedConversation(group?.id);
+    updateConversationHeaderDetails(group);
+    getSelectedConversationMessages(group?.id);
   }
 
   return (
     <div
       className={`flex items-center gap-3 p-3 ${
-        selectedConversation === conversation?.id ? "bg-[#EEF2FF]" : "bg-white"
+        selectedConversation === group?.id ? "bg-[#EEF2FF]" : "bg-white"
       } rounded-xl hover:bg-[#EEF2FF] transition-colors cursor-pointer `}
       onClick={handleClick}
     >
       <div className="flex-shrink-0">
-        {user?.profileImage ? (
+        {group?.bannerImage ? (
           <img
-            src={user?.profileImage}
-            alt={user?.username}
+            src={group?.bannerImage}
+            alt={group?.name}
             className="w-12 h-12 rounded-full object-cover"
           />
         ) : (
@@ -44,7 +42,7 @@ export default function ConversationItem({ user, conversation }) {
 
       <div className="flex-1 min-w-0">
         <div className="flex items-center justify-between mb-1">
-          <h3 className="font-semibold text-gray-900 text-sm truncate">{user?.username}</h3>
+          <h3 className="font-semibold text-gray-900 text-sm truncate">{group?.name}</h3>
           {/* <span className="text-xs text-gray-500 ml-2 flex-shrink-0">{time}</span> */}
           <span className="text-xs text-gray-500 ml-2 flex-shrink-0">10:00 PM</span>
         </div>

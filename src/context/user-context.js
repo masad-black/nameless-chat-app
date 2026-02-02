@@ -1,45 +1,32 @@
 import { createContext, useContext, useEffect, useState } from "react";
 
-import { getRandomUsers } from "@/utils/apis/users";
+import { getRandomUsers, apiRequestHandler } from "@/utils/apis";
 
 const UserContext = createContext(null);
 
 export function UserProvider({ children }) {
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState(false);
   const [usersList, setUsersList] = useState([]);
 
-  function updateIsLoading(val) {
-    setIsLoading(val);
-  }
-
-  // getting random users
-  // todo: get by lastOnline etc
   const getUsers = async () => {
-    updateIsLoading(true);
-
-    try {
-      const res = await getRandomUsers();
-
-      console.log("User api response: ", res);
-
-      if (!res?.success) {
-        setUsersList([]);
-        return;
-      }
-
-      setUsersList(res?.data);
-    } catch (error) {
-      console.log("Error in getting users (user-context):", error);
-    } finally {
-      updateIsLoading(false);
-    }
+    await apiRequestHandler(
+      getRandomUsers,
+      setIsLoading,
+      (data) => {
+        setUsersList(data);
+      },
+      () => {
+        setError(true);
+      },
+    );
   };
 
   useEffect(() => {
     getUsers();
   }, []);
 
-  const values = { usersList, isLoading, getUsers };
+  const values = { usersList, isLoading, error };
   return <UserContext value={values}>{children}</UserContext>;
 }
 

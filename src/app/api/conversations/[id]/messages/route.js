@@ -31,7 +31,7 @@ export async function GET(request, { params }) {
     return Response.json({
       success: true,
       status: 200,
-      messages,
+      data: messages,
     });
   } catch (error) {
     console.log("Error in getting conversation messages: ", error);

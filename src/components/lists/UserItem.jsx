@@ -1,8 +1,23 @@
-import { SingleUserIcon } from "@/app/assets/icons";
+import { useRouter } from "next/navigation";
+
+import { RigthArrowIcon, SingleUserIcon } from "@/app/assets/icons";
+import { useConversationContext } from "@/context";
+import { useUser } from "@/hooks";
 
 export default function UserItem({ user }) {
+  const router = useRouter();
+  const { userData } = useUser();
+  const { createConversation, isLoading } = useConversationContext();
+
+  const handleClick = async () => {
+    // 1: make the api call to add this conversation into DB
+    await createConversation("direct", user?.id);
+    // 2: redirect to conversations page
+    router.push("/conversations");
+  };
+
   return (
-    <button className="w-full flex items-center space-x-3 p-2 hover:bg-gray-100 hover:cursor-pointer transition-all border border-transparent group">
+    <div className="w-full flex items-center space-x-3 p-2 hover:bg-gray-100 hover:cursor-pointer transition-all border border-transparent group">
       <div className="relative">
         {user.profileImage ? (
           <img
@@ -27,17 +42,13 @@ export default function UserItem({ user }) {
       </div>
 
       <div className="opacity-0 group-hover:opacity-100 transition-opacity">
-        <div className="w-8 h-8 rounded-full bg-indigo-50 flex items-center justify-center">
-          <svg
-            className="w-4 h-4 text-indigo-600"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-          </svg>
-        </div>
+        <button
+          onClick={handleClick}
+          className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center"
+        >
+          <RigthArrowIcon />
+        </button>
       </div>
-    </button>
+    </div>
   );
 }

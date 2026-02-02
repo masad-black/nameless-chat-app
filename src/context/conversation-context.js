@@ -5,24 +5,31 @@ import {
   createDirectConversation,
   createGroupConversation,
   getConversationMessages,
+  apiRequestHandler,
 } from "@/utils/apis";
 import { useUser } from "@/hooks";
+import { useSocketContext } from "@/context";
+import {
+  NEW_CONVERSATION_EVENT,
+  RECEIVED_CONVERSATION_EVENT,
+  RECEIVED_MESSAGE_EVENT,
+} from "@/utils/constant";
 
 export const ConversationContext = createContext(null);
 
 export function ConversationProvider({ children }) {
   const { userData } = useUser();
   const [isLoading, setLoading] = useState(false);
+  const [messagesLoader, setMessagesLoader] = useState(false);
   const [conversationHederDetails, setConversationHeaderDetails] = useState({});
   const [userConversations, setUserConversations] = useState([]);
   const [selectedConversation, setSelectedConversation] = useState(null);
   const [selectedConversationsMessages, setSelectedConversationMessages] = useState([]);
+  const { socket, isConnected } = useSocketContext();
 
-  // console.log("session in context: ", selectedConversation);
-
-  function updateLoading(val) {
+  const updateLoading = (val) => {
     setLoading(val);
-  }
+  };
 
   function updateSelectedConversation(conversationId) {
     setSelectedConversation(conversationId);
@@ -34,8 +41,10 @@ export function ConversationProvider({ children }) {
     if (Object.keys(details).length === 0) return;
 
     if (details.type === "direct") {
-      const userDetails = details?.members.at(0).user;
-      setConversationHeaderDetails({ userDetails, type: "direct" });
+      const userDetails = details?.members.filter((member) => member.user.id !== userData.id);
+      console.log("header details: ", userDetails);
+
+      setConversationHeaderDetails({ userDetails: userDetails.at(0).user, type: "direct" });
     } else if (details.type === "group") {
       const groupDetails = {
         profileImage: details.bannerImage,
@@ -49,110 +58,137 @@ export function ConversationProvider({ children }) {
   const updateSelectedConversationMessages = (message) => {
     // console.log("In conversation context: ", selectedConversationsMessages, message);
 
+    console.log("in updatin: ", message);
     setSelectedConversationMessages((oldCon) => [...oldCon, message]);
   };
 
   // get all user conversations direct, group, and member in group
   const getConversations = async () => {
-    console.log("user Id in conversation: ", userData);
-
-    updateLoading(true);
-    try {
-      const res = await getUserConversations(userData?.id);
-
-      if (!res.success) {
-        console.log("Something wrong in req");
-        return;
-      }
-
-      console.log("api user conversations: ", res);
-
-      setUserConversations([...res.data]);
-    } catch (error) {
-      console.log("Error in getting conversations (conversation-context): ", error);
-    } finally {
-      updateLoading(false);
-    }
+    await apiRequestHandler(
+      async () => {
+        if (!userData?.id) return;
+        return await getUserConversations(userData?.id);
+      },
+      setLoading,
+      (data) => {
+        setUserConversations(data);
+      },
+      () => {
+        alert("something worng");
+      },
+    );
   };
 
   // creating new conversation
   const createConversation = async (
     conversationType,
-    createrId,
     convMemberId,
     groupName,
     groupBio,
     isPrivate,
-    groupBanner
+    groupBanner,
   ) => {
-    updateLoading(true);
+    // for creating direct(1 to 1) conversation
+    if (conversationType.toLowerCase() === "direct") {
+      await apiRequestHandler(
+        async () => {
+          if (!userData?.id) return;
+          return await createDirectConversation(conversationType, userData?.id, convMemberId);
+        },
+        setLoading,
+        (data) => {
+          setUserConversations((oldConv) => [data, ...oldConv]);
+          updateSelectedConversation(data?.id);
+          updateConversationHeaderDetails(data);
 
-    try {
-      updateLoading(true);
-      // for creating direct(1 to 1) conversation
-      if (conversationType.toLowerCase() === "direct") {
-        const res = await createDirectConversation(conversationType, createrId, convMemberId);
+          // this should be emitted
+          if (isConnected && socket) {
+            socket.emit(NEW_CONVERSATION_EVENT, { payload: data });
+          }
+        },
+        () => {
+          alert("something wrong!!");
+        },
+      );
+    } else if (conversationType.toLowerCase() === "group") {
+      await apiRequestHandler(
+        async () => {
+          if (!userData?.id) return;
 
-        console.log("response: ", res);
+          const formData = new FormData();
+          formData.append("conversationType", conversationType);
+          formData.append("createrId", userData?.id);
+          formData.append("groupName", groupName);
+          formData.append("groupBio", groupBio);
+          formData.append("isPublic", isPrivate);
+          formData.append("groupBanner", groupBanner);
 
-        if (!res.success) {
-          console.log("Something wrong in req");
-          return;
-        }
+          return await createGroupConversation(formData);
+        },
+        setLoading,
+        (data) => {
+          console.log("data: ", data);
 
-        setUserConversations((oldConv) => [res?.data, ...oldConv]);
-        updateSelectedConversation(res?.data?.id);
-      } else if (conversationType.toLowerCase() === "group") {
-        // for creating group conversation
-        const res = await createGroupConversation(
-          conversationType,
-          createrId,
-          groupName,
-          groupBio,
-          isPrivate,
-          groupBanner
-        );
-
-        console.log("response: ", res);
-
-        if (!res.success) {
-          console.log("Something wrong in req");
-          return;
-        }
-
-        setUserConversations((oldConv) => [res?.data, ...oldConv]);
-        updateSelectedConversation(res?.data?.id);
-      }
-    } catch (error) {
-      console.log("Error in creating new conversation (conversation-context): ", error);
-    } finally {
-      updateLoading(false);
+          setUserConversations((oldConv) => [data, ...oldConv]);
+          updateSelectedConversation(data?.id);
+          updateSelectedConversation(data?.id);
+          updateConversationHeaderDetails(data);
+        },
+        () => {
+          alert("something wrong!!");
+        },
+      );
     }
   };
 
   const getSelectedConversationMessages = async (id) => {
-    // updateLoading(true);
-    try {
-      const messages = await getConversationMessages(id);
+    await apiRequestHandler(
+      async () => {
+        if (!id) return;
+        return await getConversationMessages(id);
+      },
+      setMessagesLoader,
+      (data) => {
+        setSelectedConversationMessages(data);
+      },
+      () => {
+        alert("something wrong");
+      },
+    );
+  };
 
-      if (messages.length > 0) {
-        setSelectedConversationMessages(messages);
-      }
-    } catch (error) {
-      console.log(
-        "Error in getting selected conversations messages (conversation-context): ",
-        error
-      );
-    } finally {
-      // updateLoading(false);
+  const listeningNewMessage = (message) => {
+    if (message.conversationId === selectedConversation) {
+      updateSelectedConversationMessages(message);
+    } else {
     }
   };
 
+  const addConversationToList = (payload) => {
+    setUserConversations((oldConv) => [payload, ...oldConv]);
+    updateSelectedConversation(payload.id);
+    updateConversationHeaderDetails(payload);
+  };
+
+  useEffect(() => {
+    if (!socket || !isConnected) {
+      alert("Socket Not Connected to the Server!!!");
+      return;
+    }
+
+    socket.on(RECEIVED_CONVERSATION_EVENT, addConversationToList);
+    socket.on(RECEIVED_MESSAGE_EVENT, listeningNewMessage);
+
+    return () => {
+      socket.off(RECEIVED_CONVERSATION_EVENT, addConversationToList);
+      socket.off(RECEIVED_MESSAGE_EVENT, listeningNewMessage);
+    };
+  }, [socket, isConnected, , selectedConversation]);
+
   useEffect(() => {
     if (userData === undefined) return;
-
-    // the data is already fetched
-    if (userConversations.length > 0) return;
+    // // the data is already fetched
+    // if (userConversations.length > 0) return;
 
     getConversations();
   }, [userData]);
@@ -162,6 +198,7 @@ export function ConversationProvider({ children }) {
     userConversations,
     selectedConversation,
     conversationHederDetails,
+    messagesLoader,
     selectedConversationsMessages,
     updateConversationHeaderDetails,
     updateSelectedConversation,

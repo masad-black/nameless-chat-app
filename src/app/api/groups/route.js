@@ -16,10 +16,8 @@ export async function GET() {
         isPublic: true,
         _count: true,
       },
-      take: 15,
+      take: 20,
     });
-
-    console.log("groups: ", groups);
 
     return Response.json({
       success: true,
