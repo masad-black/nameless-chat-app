@@ -1,5 +1,5 @@
 import { UsersMap } from "./users_class.js";
-import { DIRECT_ROOM_EVENT } from "./constant.js";
+import { JOIN_ROOM_EVENT, NEW_MESSAGE_EVENT } from "./constant.js";
 
 export function totalConnectedClinetsCount(io) {
   console.log("Total Connected Clinets On Server: ", io.engine.clientsCount);
@@ -23,8 +23,10 @@ export function getAvailableUserRoomName(map, userIds) {
   return map.get(userIds.initiatorId) ? map.get(userIds.initiatorId) : map.get(userIds.receiverId);
 }
 
-export function joinAndSendMessageForDirectRoom(socket) {
+export function joinAndSendMessageForDirectRoom(socket, io) {
   return function ({ userIds, message }) {
+    console.log("message: ", message);
+
     // Make users join the room
     if (!UsersMap.getUserRoom(userIds)) {
       UsersMap.addNewUser(userIds.initiatorId);
@@ -36,9 +38,24 @@ export function joinAndSendMessageForDirectRoom(socket) {
     // now send the message back to other user
     if (message) {
       const roomName = UsersMap.getUserRoom(userIds);
-      socket.to(roomName).emit(DIRECT_ROOM_EVENT, message);
+      io.to(roomName).emit(DIRECT_ROOM_EVENT, { message, senderId: userIds.initiatorId });
     }
   };
 }
 
-export function joinGroupRoom() {}
+// this will simpley add the socket to the room
+export function joinRoom(socket) {
+  socket.on(JOIN_ROOM_EVENT, (conversationId) => {
+    console.log(`User joined the room conversationId: `, conversationId);
+
+    socket.join(`${conversationId}`);
+  });
+}
+
+export function sendMessage(socket) {
+  socket.on(NEW_MESSAGE_EVENT, (conversationId, message) => {
+    console.log(`New Message from user: ${message} and id ${conversationId}`);
+
+    socket.to(`${conversationId}`).emit(NEW_MESSAGE_EVENT, conversationId, message);
+  });
+}

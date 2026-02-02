@@ -3,20 +3,7 @@ import { createServer } from "http";
 import { Server } from "socket.io";
 import dotenv from "dotenv";
 
-import {
-  getAvailableRoomsOnServer,
-  getAvailableUserRoomName,
-  joinAndSendMessageForDirectRoom,
-  socketDisconnect,
-  totalConnectedClinetsCount,
-} from "./fn.js";
-import {
-  CONNECTION_EVENT,
-  DIRECT_ROOM_EVENT,
-  DISCONNECT_EVENT,
-  GROUP_ROOM_EVENT,
-} from "./constant.js";
-import { UsersMap } from "./users_class.js";
+import runSocketServer from "./socket.js";
 
 dotenv.config({
   path: [".env"],
@@ -26,8 +13,6 @@ dotenv.config({
 // env variables
 const clientURL = process.env.FRONTEND_URL;
 const port = process.env.PORT;
-
-// console.log(clientURL);
 
 const app = express();
 
@@ -40,19 +25,8 @@ const io = new Server(httpServer, {
   },
 });
 
-// Socket events
-io.on(CONNECTION_EVENT, (socket) => {
-  totalConnectedClinetsCount(io);
-  // getAvailableRoomsOnServer(io);
-
-  // 1: room for direct conversation
-  socket.on(DIRECT_ROOM_EVENT, joinAndSendMessageForDirectRoom(socket));
-
-  // 2: room for group conversation
-  // socket.on(GROUP_ROOM_EVENT, () => {});
-
-  socket.on(DISCONNECT_EVENT, socketDisconnect);
-});
+// this will run the web-socket server
+runSocketServer(io);
 
 app.get("/", (req, res) => {
   res.json({
