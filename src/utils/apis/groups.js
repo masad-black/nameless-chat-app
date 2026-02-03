@@ -7,8 +7,6 @@ export async function getRandomGroups() {
 }
 
 export async function joinGroup(userId, conversationId) {
-  console.log(userId, conversationId);
-
   return await axios.post(BASE_URL, {
     userId,
     conversationId,

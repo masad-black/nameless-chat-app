@@ -7,6 +7,8 @@ export default function Input({
   className,
   disabled,
   onEnter,
+  onPress,
+  onUp,
 }) {
   return (
     <input
@@ -20,6 +22,9 @@ export default function Input({
       onChange={(e) => onChangeHandler(e.target.value)}
       disabled={disabled}
       onKeyDown={onEnter}
+      // these both are used to detect typing
+      onKeyPress={onPress}
+      onKeyUp={onUp}
     />
   );
 }

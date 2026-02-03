@@ -10,14 +10,19 @@ import { ImagePreview } from "../ImagePreview";
 // import uploadImageToCloude from "@/libs/cloudinary";
 
 export default function SendMessage() {
+  let timer;
   const { userData } = useUser();
   const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [selectedImage, setSelectedImage] = useState();
   const [selectedFile, setFile] = useState();
-  const { conversationHederDetails, selectedConversation, updateSelectedConversationMessages } =
-    useConversationContext();
-  const { sendMessage } = useSocketContext();
+  const {
+    conversationHederDetails,
+    selectedConversation,
+    updateSelectedConversationMessages,
+    stopTypingLoader,
+  } = useConversationContext();
+  const { sendMessage, showTypingLoader } = useSocketContext();
 
   const sendTextMessage = (messageDetails) => {
     // these deatils are required to send message to other user
@@ -36,8 +41,13 @@ export default function SendMessage() {
   };
 
   async function handleClick(e) {
-    // send messag when enter is pressend
-    // and when clicked on the button
+    /*
+    - send messag when enter is pressend
+    - also when clicked on the button
+    - activate typing event
+     */
+
+    showTypingLoader(selectedConversation);
     if (e.key === "Enter") {
       // this is for image
       if (selectedImage && selectedFile) {
@@ -64,7 +74,22 @@ export default function SendMessage() {
     }
   }
 
-  useEffect(() => {}, []);
+  const onPress = () => {
+    window.clearTimeout(timer);
+  };
+
+  const onUp = () => {
+    window.clearTimeout(timer);
+    timer = window.setTimeout(() => {
+      stopTypingLoader();
+    }, 1000);
+  };
+
+  useEffect(() => {
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, []);
 
   return (
     <>
@@ -80,6 +105,8 @@ export default function SendMessage() {
               className={"w-full bg-transparent text-sm font-normal text-gray-800"}
               disabled={selectedImage && true}
               onEnter={handleClick}
+              onPress={onPress}
+              onUp={onUp}
             />
             {isEmojiPickerOpen && (
               <EmojiPicker style={{ position: "absolute", bottom: 50, right: 5 }} />

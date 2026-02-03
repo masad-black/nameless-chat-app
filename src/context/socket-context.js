@@ -9,6 +9,8 @@ import {
   NEW_MESSAGE_EVENT,
   RECEIVED_CONVERSATION_EVENT,
   RECEIVED_MESSAGE_EVENT,
+  STOP_TYPING_EVENT,
+  TYPING_EVENT,
 } from "@/utils/constant.js";
 import { createNewMessage } from "@/utils/apis";
 import { useUser } from "@/hooks";
@@ -32,10 +34,9 @@ export function SocketProvider({ children }) {
     socket.emit(NEW_MESSAGE_EVENT, { payload: response.data });
   };
 
-  // const sendMessage = (conversationId, message) => {
-
-  //   socket.emit(NEW_MESSAGE_EVENT, conversationId, message);
-  // };
+  const showTypingLoader = (conversationId) => {
+    socket.emit(TYPING_EVENT, { conversationId });
+  };
 
   const joinRoomOnServer = (conversationId) => {
     socket.emit(JOIN_ROOM_EVENT, conversationId);
@@ -82,7 +83,14 @@ export function SocketProvider({ children }) {
   //   };
   // }, [socket, userData]);
 
-  const values = { socket, sendMessage, joinRoomOnServer, isConnected, isSocketConnected };
+  const values = {
+    socket,
+    sendMessage,
+    joinRoomOnServer,
+    isConnected,
+    isSocketConnected,
+    showTypingLoader,
+  };
   return <SocketContext.Provider value={values}>{children}</SocketContext.Provider>;
 }
 

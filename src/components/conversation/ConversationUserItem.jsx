@@ -7,6 +7,7 @@ export default function ConversationUserItem({ user, conversation }) {
     updateSelectedConversation,
     updateConversationHeaderDetails,
     getSelectedConversationMessages,
+    typing,
   } = useConversationContext();
   const { joinRoomOnServer, isSocketConnected } = useSocketContext();
   const unreadCount = 3;
@@ -18,7 +19,7 @@ export default function ConversationUserItem({ user, conversation }) {
     }
 
     // this is for showing typing and other things
-    // joinRoomOnServer(conversation.id);
+    joinRoomOnServer(conversation.id);
     updateSelectedConversation(conversation.id);
     updateConversationHeaderDetails(conversation);
     getSelectedConversationMessages(conversation.id);

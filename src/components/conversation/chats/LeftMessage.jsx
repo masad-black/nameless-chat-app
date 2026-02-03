@@ -1,6 +1,8 @@
 import { SingleUserIcon } from "@/app/assets/icons";
+import { useConversationContext } from "@/context";
 
 export function LeftMessage({ message }) {
+  const { typing } = useConversationContext();
   const time = new Date(message?.createdAt);
 
   return (

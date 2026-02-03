@@ -7,11 +7,16 @@ import { RightMessage } from "./RightMessage";
 import { LeftMessage } from "./LeftMessage";
 import ErrorMessage from "@/components/ErrorMessage";
 import ChatLoader from "@/components/ChatLoader";
+import MessagesLoader from "@/components/MessageLoader";
 
 export default function ChatList() {
   const { userData } = useUser();
-  const { selectedConversationsMessages, updateSelectedConversationMessages, messagesLoader } =
-    useConversationContext();
+  const {
+    selectedConversationsMessages,
+    updateSelectedConversationMessages,
+    messagesLoader,
+    typing,
+  } = useConversationContext();
   const { socket } = useSocketContext();
   const divRef = useRef();
 
@@ -59,7 +64,7 @@ export default function ChatList() {
 
   return (
     <div className="p-3">
-      <ul ref={divRef} className="w-full">
+      <ul ref={divRef} className="w-full border">
         {selectedConversationsMessages?.map((chat) => {
           if (chat.senderId === userData?.id) {
             return <RightMessage key={chat?.id} message={chat} />;

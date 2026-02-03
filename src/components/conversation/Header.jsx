@@ -3,7 +3,7 @@ import { useConversationContext } from "@/context/conversation-context";
 import { SingleUserIcon } from "@/app/assets/icons";
 
 export default function Header() {
-  const { conversationHederDetails } = useConversationContext();
+  const { conversationHederDetails, typing } = useConversationContext();
   const { userDetails } = conversationHederDetails;
   const { groupDetails } = conversationHederDetails;
 
@@ -43,12 +43,22 @@ export default function Header() {
           <h2 className="font-semibold text-gray-900 text-base">
             {groupDetails?.name || userDetails?.username || "Unknown"}
           </h2>
-          {isOnline && (
-            <div className="flex items-center gap-1">
-              <div className="w-2 h-2 bg-green-500 rounded-full"></div>
-              <span className="text-[11px] text-green-600 font-medium">Online</span>
-            </div>
-          )}
+          <div>
+            {typing ? (
+              <div className="flex items-center gap-1">
+                <span className="text-[11px] text-green-600 font-medium">typing...</span>
+              </div>
+            ) : (
+              <>
+                {isOnline && (
+                  <div className="flex items-center gap-1">
+                    <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                    <span className="text-[11px] text-green-600 font-medium">Online</span>
+                  </div>
+                )}
+              </>
+            )}
+          </div>
         </div>
       </div>
 

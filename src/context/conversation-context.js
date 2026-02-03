@@ -13,6 +13,9 @@ import {
   NEW_CONVERSATION_EVENT,
   RECEIVED_CONVERSATION_EVENT,
   RECEIVED_MESSAGE_EVENT,
+  RECEIVED_STOP_TYPING_EVENT,
+  SHOW_TYPING_EVENT,
+  STOP_TYPING_EVENT,
 } from "@/utils/constant";
 
 export const ConversationContext = createContext(null);
@@ -20,6 +23,8 @@ export const ConversationContext = createContext(null);
 export function ConversationProvider({ children }) {
   const { userData } = useUser();
   const [isLoading, setLoading] = useState(false);
+  const [typing, setTyping] = useState(false);
+  const [typingMember, setTypingMemebr] = useState();
   const [messagesLoader, setMessagesLoader] = useState(false);
   const [conversationHederDetails, setConversationHeaderDetails] = useState({});
   const [userConversations, setUserConversations] = useState([]);
@@ -170,6 +175,21 @@ export function ConversationProvider({ children }) {
     updateConversationHeaderDetails(payload);
   };
 
+  const listeningToTyping = ({ response, member }) => {
+    if (response) {
+      setTyping(true);
+      setTypingMemebr(member);
+    }
+  };
+
+  const stopTypingLoader = () => {
+    socket.emit(STOP_TYPING_EVENT, selectedConversation);
+  };
+
+  const listeningToStopTyping = () => {
+    setTyping(false);
+  };
+
   useEffect(() => {
     if (!socket || !isConnected) {
       alert("Socket Not Connected to the Server!!!");
@@ -178,12 +198,16 @@ export function ConversationProvider({ children }) {
 
     socket.on(RECEIVED_CONVERSATION_EVENT, addConversationToList);
     socket.on(RECEIVED_MESSAGE_EVENT, listeningNewMessage);
+    socket.on(SHOW_TYPING_EVENT, listeningToTyping);
+    socket.on(RECEIVED_STOP_TYPING_EVENT, listeningToStopTyping);
 
     return () => {
       socket.off(RECEIVED_CONVERSATION_EVENT, addConversationToList);
       socket.off(RECEIVED_MESSAGE_EVENT, listeningNewMessage);
+      socket.off(SHOW_TYPING_EVENT, listeningToTyping);
+      socket.off(RECEIVED_STOP_TYPING_EVENT, listeningToTyping);
     };
-  }, [socket, isConnected, , selectedConversation]);
+  }, [socket, isConnected, , selectedConversation, typing]);
 
   useEffect(() => {
     if (userData === undefined) return;
@@ -195,6 +219,8 @@ export function ConversationProvider({ children }) {
 
   const value = {
     isLoading,
+    typing,
+    typingMember,
     userConversations,
     selectedConversation,
     conversationHederDetails,
@@ -207,6 +233,7 @@ export function ConversationProvider({ children }) {
     setUserConversations,
     getSelectedConversationMessages,
     updateSelectedConversationMessages,
+    stopTypingLoader,
   };
 
   return <ConversationContext value={value}>{children}</ConversationContext>;

@@ -1,5 +1,5 @@
 import { SingleUserIcon } from "@/app/assets/icons";
-import { useConversationContext } from "@/context";
+import { useConversationContext, useSocketContext } from "@/context";
 
 export default function ConversationGroupItem({ group }) {
   const {
@@ -8,9 +8,11 @@ export default function ConversationGroupItem({ group }) {
     updateConversationHeaderDetails,
     getSelectedConversationMessages,
   } = useConversationContext();
+  const { joinRoomOnServer } = useSocketContext();
   let unreadCount = 0;
 
   function handleClick() {
+    joinRoomOnServer(group.id);
     updateSelectedConversation(group?.id);
     updateConversationHeaderDetails(group);
     getSelectedConversationMessages(group?.id);
