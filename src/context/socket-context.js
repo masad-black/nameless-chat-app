@@ -74,6 +74,7 @@ export function SocketProvider({ children }) {
 
     return () => {
       socketConnection.disconnect();
+      socketConnection.close();
       socketConnection.off(CLIENT_CONNECTED_EVENT, listeningToConnection);
     };
   }, [status, userData]);

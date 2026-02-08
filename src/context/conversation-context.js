@@ -207,7 +207,7 @@ export function ConversationProvider({ children }) {
       socket.off(SHOW_TYPING_EVENT, listeningToTyping);
       socket.off(RECEIVED_STOP_TYPING_EVENT, listeningToTyping);
     };
-  }, [socket, isConnected, , selectedConversation, typing]);
+  }, [socket, isConnected, selectedConversation, typing]);
 
   useEffect(() => {
     if (userData === undefined) return;
