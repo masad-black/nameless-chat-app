@@ -12,7 +12,7 @@ export function RightMessage({ message }) {
             />
           </div>
         )}
-        {message && (
+        {!message?.imageUrl && (
           <div className="bg-indigo-600 text-white rounded-2xl rounded-tr-sm px-4 py-2.5">
             <p className="text-sm">{message?.content}</p>
           </div>

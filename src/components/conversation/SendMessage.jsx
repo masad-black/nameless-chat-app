@@ -1,10 +1,9 @@
 import { useEffect, useState } from "react";
-import EmojiPicker from "emoji-picker-react";
 
 import { useConversationContext, useSocketContext } from "@/context";
 import { useUser } from "@/hooks";
 import Input from "../Input";
-import { EmojiIcon, SendMessageIcon } from "@/app/assets/icons";
+import { SendMessageIcon } from "@/app/assets/icons";
 import FileUpload from "./FileUpload";
 import { ImagePreview } from "../ImagePreview";
 // import uploadImageToCloude from "@/libs/cloudinary";
@@ -12,7 +11,6 @@ import { ImagePreview } from "../ImagePreview";
 export default function SendMessage() {
   let timer;
   const { userData } = useUser();
-  const [isEmojiPickerOpen, setIsEmojiPickerOpen] = useState(false);
   const [message, setMessage] = useState("");
   const [selectedImage, setSelectedImage] = useState();
   const [selectedFile, setFile] = useState();
@@ -22,18 +20,29 @@ export default function SendMessage() {
     updateSelectedConversationMessages,
     stopTypingLoader,
   } = useConversationContext();
-  const { sendMessage, showTypingLoader } = useSocketContext();
+  const { sendMessage, showTypingLoader, sendImage } = useSocketContext();
 
-  const sendTextMessage = (messageDetails) => {
-    // these deatils are required to send message to other user
-    const { message, conversationId, receiverId } = messageDetails;
-    sendMessage(message, "text", conversationId, receiverId);
+  const sendTextMessage = (message, conversationId) => {
+    sendMessage(message, "text", conversationId);
 
     const newMessage = {
       id: Math.round(Math.random() * 10000),
       content: message,
       type: "text",
       imageUrl: null,
+      createdAt: Date.now(),
+      senderId: userData?.id,
+    };
+    updateSelectedConversationMessages(newMessage);
+  };
+
+  const sendImageMessage = (file, conversationId) => {
+    sendImage(file, "image", conversationId);
+    const newMessage = {
+      id: Math.round(Math.random() * 10000),
+      content: message,
+      type: "text",
+      imageUrl: selectedImage,
       createdAt: Date.now(),
       senderId: userData?.id,
     };
@@ -48,33 +57,24 @@ export default function SendMessage() {
      */
 
     showTypingLoader(selectedConversation);
-    if (e.key === "Enter") {
-      // this is for image
-      if (selectedImage && selectedFile) {
-        // const imageUrl = await uploadImageToCloude(selectedFile, "user");
-        console.log("image url: ", imageUrl);
-
-        // sendDirectRoomMessage(
-        //   selectedImage,
-        //   "image",
-        //   selectedConversation,
-        //   conversationHederDetails?.userDetails?.id
-        // );
-        setSelectedImage();
-        setFile();
-      } else {
-        const messageDetails = {
-          message,
-          conversationId: selectedConversation,
-          receiverId: conversationHederDetails?.userDetails?.id,
-        };
-        setMessage("");
-        sendTextMessage(messageDetails);
-      }
+    // if (e.key === "Enter") {
+    // this is for image
+    if (selectedImage && selectedFile) {
+      console.log("image url: ", selectedFile);
+      sendImageMessage(selectedFile, selectedConversation);
+      setSelectedImage();
+      setFile();
+    } else {
+      if (message.length === 0) return;
+      setMessage("");
+      sendTextMessage(message, selectedConversation);
     }
   }
+  // }
 
   const onPress = () => {
+    console.log("clear timeout");
+
     window.clearTimeout(timer);
   };
 
@@ -103,17 +103,11 @@ export default function SendMessage() {
               onChangeHandler={setMessage}
               placeholder={"Type your message..."}
               className={"w-full bg-transparent text-sm font-normal text-gray-800"}
-              disabled={selectedImage && true}
-              onEnter={handleClick}
+              // disabled={selectedImage && true}
+              // onEnter={handleClick}
               onPress={onPress}
               onUp={onUp}
             />
-            {isEmojiPickerOpen && (
-              <EmojiPicker style={{ position: "absolute", bottom: 50, right: 5 }} />
-            )}
-            <button onClick={() => setIsEmojiPickerOpen(!isEmojiPickerOpen)}>
-              <EmojiIcon />
-            </button>
           </div>
           <button
             onClick={handleClick}

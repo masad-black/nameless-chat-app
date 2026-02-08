@@ -1,8 +1,25 @@
+import { headers } from "next/headers";
+
 import { PrismaClient } from "../../../../generated/prisma";
+import uploadImageToCloude from "@/libs/cloudinary";
 
 export async function POST(request) {
   try {
-    const { type, content, conversationId, senderId } = await request.json();
+    // const formData = await request.formData();
+
+    const headerList = await headers();
+
+    if (headerList.get("content-type").startsWith("multipart/form-data")) {
+      var formData = await request.formData();
+
+      var type = formData.get("type");
+      var conversationId = formData.get("conversationId");
+      var content = formData.get("content");
+      var senderId = formData.get("senderId");
+      var file = formData.get("file");
+    } else {
+      var { type, content, conversationId, senderId, formData } = await request.json();
+    }
 
     if (!type || !conversationId || !senderId) {
       return Response.json({
@@ -12,7 +29,13 @@ export async function POST(request) {
       });
     }
 
-    console.log("message data: ", type, content, conversationId, senderId);
+    if (file) {
+      const arrayBuffer = await file.arrayBuffer();
+      const buffer = Buffer.from(arrayBuffer);
+      var url = await uploadImageToCloude(buffer, "chats");
+    }
+
+    // console.log("message data: ", type, content, conversationId, senderId);
     const prisma = new PrismaClient();
 
     const message = await prisma.messages.create({
@@ -21,6 +44,7 @@ export async function POST(request) {
         type: type,
         senderId,
         conversationId,
+        imageUrl: url || null,
       },
       select: {
         id: true,
@@ -46,14 +70,6 @@ export async function POST(request) {
       message,
       members,
     });
-
-    if (!message) {
-      return Response.json({
-        success: false,
-        status: 500,
-        message: "Internal Server Error",
-      });
-    }
 
     return Response.json({
       success: true,

@@ -42,3 +42,15 @@ export async function GET(request, { params }) {
     });
   }
 }
+
+export async function POST(params) {
+  try {
+  } catch (error) {
+    console.log("Error in creating conversation messages: ", error);
+    return Response.json({
+      success: false,
+      status: 500,
+      message: "Internal Server Error",
+    });
+  }
+}

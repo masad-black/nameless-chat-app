@@ -1,23 +1,16 @@
 import { useEffect, useRef } from "react";
 
-import { useConversationContext, useSocketContext } from "@/context";
-import { DIRECT_ROOM_EVENT } from "@/utils/constant";
+import { useConversationContext } from "@/context";
 import { useUser } from "@/hooks";
 import { RightMessage } from "./RightMessage";
 import { LeftMessage } from "./LeftMessage";
 import ErrorMessage from "@/components/ErrorMessage";
 import ChatLoader from "@/components/ChatLoader";
-import MessagesLoader from "@/components/MessageLoader";
 
 export default function ChatList() {
   const { userData } = useUser();
-  const {
-    selectedConversationsMessages,
-    updateSelectedConversationMessages,
-    messagesLoader,
-    typing,
-  } = useConversationContext();
-  const { socket } = useSocketContext();
+  const { selectedConversationsMessages, updateSelectedConversationMessages, messagesLoader } =
+    useConversationContext();
   const divRef = useRef();
 
   function handleSend({ message, senderId }) {
@@ -34,14 +27,6 @@ export default function ChatList() {
 
     updateSelectedConversationMessages(newMessage);
   }
-
-  // useEffect(() => {
-  //   socket.on(DIRECT_ROOM_EVENT, handleSend);
-
-  //   return () => {
-  //     socket.off(DIRECT_ROOM_EVENT, handleSend);
-  //   };
-  // }, []);
 
   useEffect(() => {
     // move the scrollbar automatically down when new message is received
@@ -64,7 +49,7 @@ export default function ChatList() {
 
   return (
     <div className="p-3">
-      <ul ref={divRef} className="w-full border">
+      <ul ref={divRef} className="w-full">
         {selectedConversationsMessages?.map((chat) => {
           if (chat.senderId === userData?.id) {
             return <RightMessage key={chat?.id} message={chat} />;

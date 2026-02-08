@@ -33,6 +33,10 @@ export default async function uploadImageToCloude(buffer, type) {
         ...options,
       };
     } else if (type.toLowerCase() === "chat") {
+      options = {
+        folder: "chat-app/chats-images",
+        ...options,
+      };
     }
 
     // Upload to Cloudinary

@@ -26,11 +26,16 @@ export function SocketProvider({ children }) {
   // this will tell if the client is connected to the server
   const [isConnected, setConnected] = useState(false);
 
-  const sendMessage = async (message, type, conversationId, receiverId) => {
-    const userIds = { initiatorId: userData?.id, receiverId };
-    const response = await createNewMessage(type, message, conversationId, userIds.initiatorId);
+  const sendMessage = async (message, type, conversationId) => {
+    const response = await createNewMessage(type, message, conversationId, userData?.id);
 
     // this event will send message to WS server
+    socket.emit(NEW_MESSAGE_EVENT, { payload: response.data });
+  };
+
+  const sendImage = async (file, type, conversationId) => {
+    const response = await createNewMessage(type, null, conversationId, userData?.id, file);
+
     socket.emit(NEW_MESSAGE_EVENT, { payload: response.data });
   };
 
@@ -90,6 +95,7 @@ export function SocketProvider({ children }) {
     isConnected,
     isSocketConnected,
     showTypingLoader,
+    sendImage,
   };
   return <SocketContext.Provider value={values}>{children}</SocketContext.Provider>;
 }
